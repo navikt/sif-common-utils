@@ -34,7 +34,7 @@ export const getDatesInMonth = (month: Date, onlyWeekDays = false): Date[] => {
 };
 
 export const getLastWeekDayInMonth = (month: Date): Date => {
-    return dayjs(month).endOf('month').startOf('week').add(4, 'days').toDate();
+    return dayjs(month).endOf('month').startOf('isoWeek').add(4, 'days').toDate();
 };
 
 export const getFirstWeekDayInMonth = (month: Date): Date => {

@@ -174,7 +174,7 @@ export const getMonthDateRange = (date: Date, onlyWeekDays = false): DateRange =
 
 export const getWeekDateRange = (date: Date, onlyWeekDays = false): DateRange => {
     return {
-        from: dayjs(date).startOf('week').toDate(),
+        from: dayjs(date).startOf('isoWeek').toDate(),
         to: dayjs(date)
             .endOf('isoWeek')
             .subtract(onlyWeekDays ? 2 : 0, 'days')

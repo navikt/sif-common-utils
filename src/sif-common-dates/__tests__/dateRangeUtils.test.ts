@@ -1,8 +1,14 @@
+import dayjs from 'dayjs';
 import {
+    dateIsInDateRange,
+    dateIsInsideDateRange,
+    dateIsWithinMaybeDateRange,
     DateRange,
     dateRangesCollide,
     datesCollideWithDateRanges,
     dateToISODate,
+    getMonthsInDateRange,
+    getWeekDateRange,
     isDateRange,
     ISODateToDate,
     sortDateRange,
@@ -12,7 +18,7 @@ import { getDatesInMonthOutsideDateRange, getNumberOfDaysInDateRange, getWeeksIn
 
 describe('dateRangeUtils', () => {
     const from: Date = ISODateToDate('2020-01-01');
-    const to: Date = ISODateToDate('2020-01-02');
+    const to: Date = ISODateToDate('2020-01-03');
 
     describe('isDateRange', () => {
         it('returns false when not DateRange', () => {
@@ -111,7 +117,106 @@ describe('dateRangeUtils', () => {
             expect(datesCollideWithDateRanges([dateInside2, dateBefore], [dateRange1, dateRange2])).toBeTruthy();
         });
     });
-    describe('dateIsWithinMaybeDateRange', () => {});
+    describe('dateIsWithinMaybeDateRange', () => {
+        const dateBefore = ISODateToDate('2020-01-01');
+        const date = ISODateToDate('2020-01-03');
+        const from = ISODateToDate('2020-01-02');
+        const to = ISODateToDate('2020-01-05');
+
+        it('returnerer true når to-date ikke er satt og dato er lik eller etter from-date', () => {
+            expect(dateIsWithinMaybeDateRange(date, { from: date })).toBeTruthy();
+            expect(dateIsWithinMaybeDateRange(date, { from })).toBeTruthy();
+        });
+        it('returnerer false når to-date ikke er satt og dato er før from-date', () => {
+            expect(dateIsWithinMaybeDateRange(dateBefore, { from })).toBeFalsy();
+        });
+        it('returnerer true når from-date ikke er satt og dato er lik eller før to-date', () => {
+            expect(dateIsWithinMaybeDateRange(date, { to: date })).toBeTruthy();
+            expect(dateIsWithinMaybeDateRange(date, { to })).toBeTruthy();
+        });
+        it('returnerer false når from-date ikke er satt og dato er etter to-date', () => {
+            expect(dateIsWithinMaybeDateRange(date, { to: from })).toBeFalsy();
+        });
+    });
+    describe('dateIsInDateRange', () => {
+        it('returnerer true når dato er lik startdato', () => {
+            expect(dateIsInDateRange(from, { from, to })).toBeTruthy();
+        });
+        it('returnerer true når dato er lik sluttdato', () => {
+            expect(dateIsInDateRange(to, { from, to })).toBeTruthy();
+        });
+        it('returnerer true når dato er mellom start og sluttdato', () => {
+            expect(dateIsInDateRange(dayjs(from).add(1, 'day').toDate(), { from, to })).toBeTruthy();
+        });
+        it('returnerer false når dato er før startdato', () => {
+            expect(dateIsInDateRange(dayjs(from).subtract(1, 'day').toDate(), { from, to })).toBeFalsy();
+        });
+        it('returnerer false når dato er etter sluttdato', () => {
+            expect(dateIsInDateRange(dayjs(to).add(1, 'day').toDate(), { from, to })).toBeFalsy();
+        });
+    });
+    describe('dateIsInsideDateRange', () => {
+        it('returnerer false når dato er lik startdato', () => {
+            expect(dateIsInsideDateRange(from, { from, to })).toBeFalsy();
+        });
+        it('returnerer false når dato er lik sluttdato', () => {
+            expect(dateIsInsideDateRange(to, { from, to })).toBeFalsy();
+        });
+        it('returnerer true når dato er mellom start og sluttdato', () => {
+            expect(dateIsInsideDateRange(dayjs(from).add(1, 'day').toDate(), { from, to })).toBeTruthy();
+        });
+        it('returnerer false når dato er før startdato', () => {
+            expect(dateIsInsideDateRange(dayjs(from).subtract(1, 'day').toDate(), { from, to })).toBeFalsy();
+        });
+        it('returnerer false når dato er etter sluttdato', () => {
+            expect(dateIsInsideDateRange(dayjs(to).add(1, 'day').toDate(), { from, to })).toBeFalsy();
+        });
+    });
+    describe('getMonthsInDateRange', () => {
+        const dateRange: DateRange = {
+            from: ISODateToDate('2020-01-05'),
+            to: ISODateToDate('2020-01-20'),
+        };
+        it('returnerer måned med avgrenst fra og til dato når returnFullMonths === false', () => {
+            const result = getMonthsInDateRange(dateRange);
+            expect(result.length).toEqual(1);
+            expect(dateToISODate(result[0].from)).toEqual('2020-01-05');
+            expect(dateToISODate(result[0].to)).toEqual('2020-01-20');
+        });
+        it('returnerer hele måneden når returnFullMonths === true', () => {
+            const result = getMonthsInDateRange(dateRange, true);
+            expect(result.length).toEqual(1);
+            expect(dateToISODate(result[0].from)).toEqual('2020-01-01');
+            expect(dateToISODate(result[0].to)).toEqual('2020-01-31');
+        });
+        it('returnerer riktig antall måneder når dateRange går over 15 måneder', () => {
+            const from = ISODateToDate('2020-01-10');
+            const to = dayjs(from).add(14, 'months').toDate();
+            const result = getMonthsInDateRange({
+                from,
+                to,
+            });
+            expect(result.length).toEqual(15);
+            expect(dateToISODate(result[0].from)).toEqual('2020-01-10');
+            expect(dateToISODate(result[14].to)).toEqual('2021-03-10');
+        });
+    });
+    describe('getWeekDateRange', () => {
+        it('returnerer riktige datoer når onlyWeekdays === false', () => {
+            const result = getWeekDateRange(ISODateToDate('2020-01-01'));
+            expect(dateToISODate(result.from)).toEqual('2019-12-30');
+            expect(dateToISODate(result.to)).toEqual('2020-01-05');
+            expect(dayjs(result.from).isoWeekday()).toEqual(1);
+            expect(dayjs(result.to).isoWeekday()).toEqual(7);
+        });
+        it('returnerer riktige datoer når onlyWeekdays === true', () => {
+            const result = getWeekDateRange(ISODateToDate('2020-01-01'), true);
+            expect(dateToISODate(result.from)).toEqual('2019-12-30');
+            expect(dateToISODate(result.to)).toEqual('2020-01-03');
+            expect(dayjs(result.from).isoWeekday()).toEqual(1);
+            expect(dayjs(result.to).isoWeekday()).toEqual(5);
+        });
+    });
     describe('getWeeksInDateRange', () => {
         it('returnerer 1 når det perioden er innenfor én uke', () => {
             const dateRange: DateRange = {
