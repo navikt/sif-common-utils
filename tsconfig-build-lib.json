@@ -19,8 +19,8 @@
         "declaration": true,
         "moduleResolution": "node",
         "noEmit": false,
-        "baseUrl": "./src/sif-common-utils"
+        "baseUrl": "./src/sif-common-dates"
     },
-    "include": ["src/sif-common-utils"],
+    "include": ["src/sif-common-dates"],
     "exclude": ["node_modules", "src/dev"]
 }

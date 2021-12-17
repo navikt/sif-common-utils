@@ -16,5 +16,5 @@
         "noEmit": true,
         "jsx": "react-jsx"
     },
-    "include": ["src/sif-common-utils"]
+    "include": ["src/sif-common-dates"]
 }
