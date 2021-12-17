@@ -23,7 +23,7 @@ dayjs.extend(minMax);
  * @param dateRange
  * @returns boolean
  */
-const isDateRange = (dateRange: any): dateRange is DateRange => {
+export const isDateRange = (dateRange: any): dateRange is DateRange => {
     return dateRange.from && dateRange.to;
 };
 
