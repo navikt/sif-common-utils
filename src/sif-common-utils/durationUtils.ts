@@ -1,10 +1,19 @@
 import { parse } from 'iso8601-duration';
 import { Duration, InputDuration, ISODuration, MaybeDuration } from '.';
 
+export const durationAsInputDuration = (duration: Partial<Duration>): InputDuration => ensureInputDuration(duration);
+
 export const ensureDuration = (duration: MaybeDuration): Duration => {
     return {
         hours: duration.hours || 0,
         minutes: duration.minutes || 0,
+    };
+};
+
+export const ensureInputDuration = (duration: MaybeDuration): InputDuration => {
+    return {
+        hours: `${duration.hours || '0'}`,
+        minutes: `${duration.minutes || '0'}`,
     };
 };
 
