@@ -10,7 +10,7 @@ export const ensureDuration = (duration: MaybeDuration): Duration => {
     };
 };
 
-export const ensureInputDuration = (duration: MaybeDuration): InputDuration => {
+export const ensureInputDuration = (duration: Partial<InputDuration | Duration>): InputDuration => {
     return {
         hours: `${duration.hours || '0'}`,
         minutes: `${duration.minutes || '0'}`,

@@ -7,6 +7,7 @@ import {
     durationToDecimalDuration,
     durationToISODuration,
     ensureDuration,
+    ensureInputDuration,
     ISODurationToDuration,
     ISODurationToInputDuration,
     isValidDuration,
@@ -149,6 +150,28 @@ describe('durationUtils', () => {
             const duration = ensureDuration({ hours: 1, minutes: 2 });
             expect(duration.hours).toEqual(1);
             expect(duration.minutes).toEqual(2);
+        });
+    });
+    describe('ensureInputDuration', () => {
+        it('returns valid duration if hours or minutes are missing', () => {
+            const duration = ensureInputDuration({});
+            expect(duration.hours).toEqual('0');
+            expect(duration.minutes).toEqual('0');
+        });
+        it('keeps hours if hours are defined and minutes are undefined', () => {
+            const duration = ensureInputDuration({ hours: '1' });
+            expect(duration.hours).toEqual('1');
+            expect(duration.minutes).toEqual('0');
+        });
+        it('keeps minutes if hours are defined and minutes are undefined', () => {
+            const duration = ensureInputDuration({ minutes: 1 });
+            expect(duration.hours).toEqual('0');
+            expect(duration.minutes).toEqual('1');
+        });
+        it('keeps hours and minutes if both are defined', () => {
+            const duration = ensureInputDuration({ hours: 1, minutes: 2 });
+            expect(duration.hours).toEqual('1');
+            expect(duration.minutes).toEqual('2');
         });
     });
     describe('durationsAreEqual', () => {
