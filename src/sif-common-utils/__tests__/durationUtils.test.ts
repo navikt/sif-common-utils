@@ -1,5 +1,6 @@
 import {
     decimalDurationToDuration,
+    decimalDurationToInputDuration,
     Duration,
     durationAsInputDuration,
     durationIsZero,
@@ -11,7 +12,6 @@ import {
     ISODurationToDuration,
     ISODurationToInputDuration,
     isValidDuration,
-    maybeDurationToDecimalDuration,
 } from '..';
 
 describe('durationUtils', () => {
@@ -52,28 +52,27 @@ describe('durationUtils', () => {
         });
     });
     describe('durationToDecimalDuration', () => {
-        it('converts 1 hour correctly', () => {
-            expect(durationToDecimalDuration({ hours: 1, minutes: 0 })).toEqual(1);
+        describe('duration with numbers', () => {
+            it('converts 1 hour correctly', () => {
+                expect(durationToDecimalDuration({ hours: 1, minutes: 0 })).toEqual(1);
+            });
+            it('converts 1 hour and 30 minutes correctly', () => {
+                expect(durationToDecimalDuration({ hours: 1, minutes: 30 })).toEqual(1.5);
+            });
+            it('converts 1 hour and 59 minutes correctly', () => {
+                expect(durationToDecimalDuration({ hours: 1, minutes: 59 })).toEqual(1.98);
+            });
         });
-        it('converts 1 hour and 30 minutes correctly', () => {
-            expect(durationToDecimalDuration({ hours: 1, minutes: 30 })).toEqual(1.5);
-        });
-        it('converts 1 hour and 59 minutes correctly', () => {
-            expect(durationToDecimalDuration({ hours: 1, minutes: 59 })).toEqual(1.98);
-        });
-    });
-    describe('maybeDurationToDecimalDuration', () => {
-        it('converts undefined hour and 2 minutes correctly', () => {
-            expect(maybeDurationToDecimalDuration({ minutes: 30 })).toEqual(0.5);
-        });
-        it('converts one hour and undefined minutes correctly', () => {
-            expect(maybeDurationToDecimalDuration({ hours: 1 })).toEqual(1);
-        });
-        it('converts 1 hour and 30 minutes correctly', () => {
-            expect(maybeDurationToDecimalDuration({ hours: 1, minutes: 30 })).toEqual(1.5);
-        });
-        it('converts 1 hour and 59 minutes correctly', () => {
-            expect(maybeDurationToDecimalDuration({ hours: 1, minutes: 59 })).toEqual(1.98);
+        describe('inputDuration with strings', () => {
+            it('converts 1 hour correctly', () => {
+                expect(durationToDecimalDuration({ hours: '1', minutes: '0' })).toEqual(1);
+            });
+            it('converts 1 hour and 30 minutes correctly', () => {
+                expect(durationToDecimalDuration({ hours: '1', minutes: '30' })).toEqual(1.5);
+            });
+            it('converts 1 hour and 59 minutes correctly', () => {
+                expect(durationToDecimalDuration({ hours: '1', minutes: '59' })).toEqual(1.98);
+            });
         });
     });
     describe('decimalDurationToDuration', () => {
@@ -91,6 +90,23 @@ describe('durationUtils', () => {
             const result = decimalDurationToDuration(1.98);
             expect(result.hours).toEqual(1);
             expect(result.minutes).toEqual(59);
+        });
+    });
+    describe('decimalDurationToInputDuration', () => {
+        it('converts 1 hour correctly', () => {
+            const result = decimalDurationToInputDuration(1);
+            expect(result.hours).toEqual('1');
+            expect(result.minutes).toEqual('0');
+        });
+        it('converts 1,5 hours correctly', () => {
+            const result = decimalDurationToInputDuration(1.5);
+            expect(result.hours).toEqual('1');
+            expect(result.minutes).toEqual('30');
+        });
+        it('converts 1,98 hours correctly', () => {
+            const result = decimalDurationToInputDuration(1.98);
+            expect(result.hours).toEqual('1');
+            expect(result.minutes).toEqual('59');
         });
     });
     describe('ISODurationToInputDuration', () => {
@@ -148,6 +164,11 @@ describe('durationUtils', () => {
         });
         it('keeps hours and minutes if both are defined', () => {
             const duration = ensureDuration({ hours: 1, minutes: 2 });
+            expect(duration.hours).toEqual(1);
+            expect(duration.minutes).toEqual(2);
+        });
+        it('handles hours and minutes when they are strings', () => {
+            const duration = ensureDuration({ hours: '1', minutes: '2' });
             expect(duration.hours).toEqual(1);
             expect(duration.minutes).toEqual(2);
         });

@@ -1,12 +1,15 @@
 import { parse } from 'iso8601-duration';
-import { Duration, InputDuration, ISODuration, MaybeDuration } from '.';
+import { Duration, InputDuration, ISODuration } from '.';
 
 export const durationAsInputDuration = (duration: Partial<Duration>): InputDuration => ensureInputDuration(duration);
+export const inputDurationAsDuration = (duration: Partial<InputDuration>): Duration => ensureDuration(duration);
 
-export const ensureDuration = (duration: MaybeDuration): Duration => {
+export const ensureDuration = (duration: Partial<InputDuration | Duration>): Duration => {
+    const hours = duration.hours || 0;
+    const minutes = duration.minutes || 0;
     return {
-        hours: duration.hours || 0,
-        minutes: duration.minutes || 0,
+        hours: typeof hours === 'string' ? parseInt(hours, 10) : hours,
+        minutes: typeof minutes === 'string' ? parseInt(minutes, 10) : minutes,
     };
 };
 
@@ -17,15 +20,18 @@ export const ensureInputDuration = (duration: Partial<InputDuration | Duration>)
     };
 };
 
-export const durationIsZero = (duration: MaybeDuration): boolean => {
+export const durationIsZero = (duration: Partial<Duration | InputDuration>): boolean => {
     return durationToISODuration(duration) === 'PT0H0M';
 };
 
-export const durationToISODuration = ({ hours, minutes }: Partial<Duration>): ISODuration => {
+export const durationToISODuration = ({ hours, minutes }: Partial<Duration | InputDuration>): ISODuration => {
     return `PT${hours || 0}H${minutes || 0}M`;
 };
 
-export const durationsAreEqual = (duration1?: MaybeDuration, duration2?: MaybeDuration): boolean => {
+export const durationsAreEqual = (
+    duration1?: Partial<InputDuration | Duration>,
+    duration2?: Partial<InputDuration | Duration>
+): boolean => {
     if (duration1 === undefined && duration2 === undefined) {
         return true;
     }
@@ -64,13 +70,18 @@ export const decimalDurationToDuration = (duration: number): Duration => {
     };
 };
 
-export const maybeDurationToDecimalDuration = (maybeDuration: MaybeDuration): number => {
-    const duration = { hours: maybeDuration.hours || 0, minutes: maybeDuration.minutes || 0 };
-    return durationToDecimalDuration(duration);
+export const decimalDurationToInputDuration = (duration: number): InputDuration => {
+    const hours = Math.floor(duration);
+    const minutes = Math.round(60 * (duration % 1));
+    return ensureInputDuration({
+        hours,
+        minutes,
+    });
 };
 
-export const durationToDecimalDuration = (maybeDuration: Duration): number => {
-    const decimalTime = (maybeDuration.hours || 0) + ((100 / 60) * (maybeDuration.minutes || 0)) / 100;
+export const durationToDecimalDuration = (duration: Partial<Duration | InputDuration>): number => {
+    const { hours, minutes } = ensureDuration(duration);
+    const decimalTime = hours + ((100 / 60) * minutes) / 100;
     return Math.round(decimalTime * 100) / 100;
 };
 

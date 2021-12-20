@@ -21,6 +21,5 @@ export interface InputDuration {
     hours: string;
     minutes: string;
 }
-export type MaybeDuration = Partial<Duration>;
 
 export type DecimalTime = number;
