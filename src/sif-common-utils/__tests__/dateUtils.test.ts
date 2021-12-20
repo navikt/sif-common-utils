@@ -7,9 +7,26 @@ import {
     getLastWeekDayInMonth,
     isDateInDates,
     ISODateToDate,
+    getYearMonthKey,
+    prettifyDate,
+    prettifyDateExtended,
+    prettifyDateFull,
 } from '..';
 
 describe('dateUtils', () => {
+    describe('prettify dates', () => {
+        const date = ISODateToDate('2021-01-01');
+        it('prettifyDate', () => {
+            expect(prettifyDate(date)).toEqual('01.01.2021');
+        });
+        it('prettifyDateFull', () => {
+            expect(prettifyDateExtended(date)).toEqual('1. Jan. 2021');
+        });
+        it('prettifyDateExtended', () => {
+            expect(prettifyDateFull(date)).toEqual('1. January 2021');
+        });
+    });
+
     describe('ISODateToDate', () => {
         it('converts an iso-date formatted date to Date object, utc', () => {
             const result = ISODateToDate('2021-01-01');
@@ -101,6 +118,15 @@ describe('dateUtils', () => {
         });
         it('returns false if date does not exist in dates[]', () => {
             expect(isDateInDates(dateNotInDates, dates)).toBeFalsy();
+        });
+        it('returns false if dates is undefined', () => {
+            expect(isDateInDates(dateNotInDates, undefined)).toBeFalsy();
+        });
+    });
+
+    describe('getYearMonthKey', () => {
+        it('returns correct yearMonthKey', () => {
+            expect(getYearMonthKey(ISODateToDate('2021-01-01'))).toEqual('2021-01');
         });
     });
 });

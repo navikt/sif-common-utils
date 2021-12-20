@@ -39,6 +39,7 @@
         "start": "react-scripts start",
         "build": "react-scripts build",
         "test": "react-scripts test",
+        "test-c": "jest  --coverage --config ./jest/jest.config.js --watch",
         "eject": "react-scripts eject",
         "build-lib": "npm-run-all clean-lib compile-lib-script",
         "clean-lib": "rimraf ./lib",

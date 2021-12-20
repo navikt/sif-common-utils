@@ -10,7 +10,7 @@ dayjs.extend(isoWeek);
 const ISODateFormat = 'YYYY-MM-DD';
 
 const prettyDateFormat = 'DD.MM.YYYY';
-const prettyDateFormatExtended = 'D. MMM YYYY';
+const prettyDateFormatExtended = 'D. MMM. YYYY';
 const prettyDateFormatFull = 'D. MMMM YYYY';
 
 export const dateToday = dayjs.utc().toDate();
