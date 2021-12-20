@@ -1,6 +1,7 @@
 import {
     decimalDurationToDuration,
     Duration,
+    durationAsInputDuration,
     durationIsZero,
     durationsAreEqual,
     durationToDecimalDuration,
@@ -13,6 +14,14 @@ import {
 } from '..';
 
 describe('durationUtils', () => {
+    describe('durationAsInputDuration', () => {
+        it('converts correctly', () => {
+            const result = durationAsInputDuration({ hours: 1, minutes: 2 });
+            expect(result.hours).toEqual('1');
+            expect(result.minutes).toEqual('2');
+        });
+    });
+
     describe('durationToISODuration', () => {
         it('converts {h: 0, m: 0} to ISODuration', () => {
             expect(durationToISODuration({ hours: 0, minutes: 0 })).toEqual('PT0H0M');
