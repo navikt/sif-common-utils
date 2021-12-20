@@ -9,6 +9,7 @@ import {
     durationToISODuration,
     ensureDuration,
     ensureInputDuration,
+    inputDurationAsDuration,
     ISODurationToDuration,
     ISODurationToInputDuration,
     isValidDuration,
@@ -20,6 +21,14 @@ describe('durationUtils', () => {
             const result = durationAsInputDuration({ hours: 1, minutes: 2 });
             expect(result.hours).toEqual('1');
             expect(result.minutes).toEqual('2');
+        });
+    });
+
+    describe('inputDurationAsDuration', () => {
+        it('returns duration correctly when inputDuration is valid', () => {
+            const result = inputDurationAsDuration({ hours: '6', minutes: '30' });
+            expect(result?.hours).toEqual(6);
+            expect(result?.minutes).toEqual(30);
         });
     });
 
