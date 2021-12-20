@@ -1,8 +1,29 @@
 import { parse } from 'iso8601-duration';
 import { Duration, InputDuration, ISODuration, MaybeDuration } from '.';
 
+export const ensureDuration = (duration: MaybeDuration): Duration => {
+    return {
+        hours: duration.hours || 0,
+        minutes: duration.minutes || 0,
+    };
+};
+
+export const durationIsZero = (duration: MaybeDuration): boolean => {
+    return durationToISODuration(duration) === 'PT0H0M';
+};
+
 export const durationToISODuration = ({ hours, minutes }: Partial<Duration>): ISODuration => {
     return `PT${hours || 0}H${minutes || 0}M`;
+};
+
+export const durationsAreEqual = (duration1?: MaybeDuration, duration2?: MaybeDuration): boolean => {
+    if (duration1 === undefined && duration2 === undefined) {
+        return true;
+    }
+    if (duration1 === undefined || duration2 === undefined) {
+        return false;
+    }
+    return durationToISODuration(duration1) === durationToISODuration(duration2);
 };
 
 export const ISODurationToDuration = (duration: string): Duration => {
