@@ -5,6 +5,10 @@
     "main": "lib/index.js",
     "types": "lib/index.d.js",
     "description": "Diverse utils for Sykdom i familien teamet",
+    "files": [
+        "package.json",
+        "/lib"
+    ],
     "directories": {
         "lib": "lib"
     },
