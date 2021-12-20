@@ -1,7 +1,23 @@
 {
     "name": "@navikt/sif-common-utils",
-    "version": "0.1.0",
-    "private": true,
+    "version": "0.1.1",
+    "private": false,
+    "main": "lib/index.js",
+    "types": "lib/index.d.js",
+    "description": "Diverse utils for Sykdom i familien teamet",
+    "directories": {
+        "lib": "lib"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/navikt/sif-common-utils.git"
+    },
+    "author": "navikt",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/navikt/sif-common-utils/issues"
+    },
+    "homepage": "https://navikt.github.io/sif-common-utils",
     "dependencies": {
         "iso8601-duration": "^1.3.0",
         "lodash.uniq": "^4.5.0"
