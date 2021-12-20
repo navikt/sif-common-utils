@@ -239,7 +239,7 @@ export const getYearsInDateRanges = (dateRanges: DateRange[]): number[] =>
  */
 export const getNumberOfDaysInDateRange = (dateRange: DateRange, onlyWeekDays = false): number =>
     onlyWeekDays
-        ? getDatesInDateRange(dateRange, true).length
+        ? getDatesInDateRange(dateRange, onlyWeekDays).length
         : Math.abs(dayjs(dateRange.to).diff(dateRange.from, 'days')) + 1;
 
 /**

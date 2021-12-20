@@ -33,10 +33,6 @@ export const getDatesInMonth = (month: Date, onlyWeekDays = false): Date[] => {
     return getDatesInDateRange(getMonthDateRange(month, onlyWeekDays), onlyWeekDays);
 };
 
-export const getLastWeekDayInMonth = (month: Date): Date => {
-    return dayjs(month).endOf('month').startOf('isoWeek').add(4, 'days').toDate();
-};
-
 export const getFirstWeekDayInMonth = (month: Date): Date => {
     const firstDay = dayjs(month).startOf('month');
     if (firstDay.isoWeekday() > 5) {
@@ -45,15 +41,21 @@ export const getFirstWeekDayInMonth = (month: Date): Date => {
     return firstDay.toDate();
 };
 
+export const getLastWeekDayInMonth = (month: Date): Date => {
+    const lastDate = dayjs(month).endOf('month');
+    const isoWeekDay = lastDate.isoWeekday();
+    return isoWeekDay <= 5 ? lastDate.toDate() : lastDate.startOf('isoWeek').add(4, 'days').toDate();
+};
+
+export const dateIsWeekDay = (date: Date): boolean => {
+    return dayjs(date).isoWeekday() <= 5;
+};
+
 export const isDateInDates = (date: Date, dates?: Date[]): boolean => {
     if (!dates) {
         return false;
     }
     return dates.some((d) => dayjs(date).isSame(d, 'day'));
-};
-
-export const dateIsWeekDay = (date: Date): boolean => {
-    return dayjs(date).isoWeekday() <= 5;
 };
 
 export const getYearMonthKey = (date: Date): string => dayjs(date).format('YYYY-MM');

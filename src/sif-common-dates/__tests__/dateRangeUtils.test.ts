@@ -7,6 +7,7 @@ import {
     dateRangesCollide,
     datesCollideWithDateRanges,
     dateToISODate,
+    getDatesInDateRange,
     getMonthsInDateRange,
     getWeekDateRange,
     isDateRange,
@@ -255,6 +256,33 @@ describe('dateRangeUtils', () => {
             expect(dateToISODate(result[2].to)).toEqual('2021-01-11');
         });
     });
+    describe('getDatesInDateRange', () => {
+        it('returnerer riktige datoer når alle ukedager er med', () => {
+            const result = getDatesInDateRange({
+                from: ISODateToDate('2020-01-01'),
+                to: ISODateToDate('2020-02-15'),
+            });
+            expect(result.length).toEqual(46);
+            expect(dateToISODate(result[0])).toEqual('2020-01-01');
+            expect(dateToISODate(result[45])).toEqual('2020-02-15');
+        });
+        it('returnerer riktige datoer når kun virkedager er med', () => {
+            const result = getDatesInDateRange(
+                {
+                    from: ISODateToDate('2020-01-01'),
+                    to: ISODateToDate('2020-02-15'),
+                },
+                true
+            );
+            expect(result.length).toEqual(33);
+            expect(dateToISODate(result[0])).toEqual('2020-01-01');
+            expect(dateToISODate(result[3])).toEqual('2020-01-06');
+            expect(dateToISODate(result[32])).toEqual('2020-02-14');
+        });
+    });
+    // describe('getYearsInDateRanges', () => {
+    //     it('');
+    // });
     describe('getNumberOfDaysInDateRange', () => {
         describe('Når en teller med helgedager', () => {
             it('returnerer 1 når det er samme fra og til dato', () => {
