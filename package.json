@@ -1,5 +1,5 @@
 {
-    "name": "sif-common-dates",
+    "name": "sif-common-utils",
     "version": "0.1.0",
     "private": true,
     "dependencies": {
@@ -60,11 +60,6 @@
             "last 1 chrome version",
             "last 1 firefox version",
             "last 1 safari version"
-        ]
-    },
-    "jest": {
-        "collectCoverageFrom": [
-            "src/sif-common-dates/**/*.ts"
         ]
     }
 }

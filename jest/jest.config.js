@@ -27,5 +27,5 @@ module.exports = {
         },
     },
     moduleDirectories: ['../node_modules'],
-    rootDir: '../src/sif-common-dates',
+    rootDir: '../src/sif-common-utils',
 };
