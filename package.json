@@ -1,5 +1,5 @@
 {
-    "name": "sif-common-utils",
+    "name": "@navikt/sif-common-utils",
     "version": "0.1.0",
     "private": true,
     "dependencies": {
