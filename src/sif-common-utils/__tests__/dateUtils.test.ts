@@ -11,6 +11,7 @@ import {
     prettifyDate,
     prettifyDateExtended,
     prettifyDateFull,
+    getFirstOfTwoDates,
 } from '..';
 
 describe('dateUtils', () => {
@@ -127,6 +128,19 @@ describe('dateUtils', () => {
     describe('getYearMonthKey', () => {
         it('returns correct yearMonthKey', () => {
             expect(getYearMonthKey(ISODateToDate('2021-01-01'))).toEqual('2021-01');
+        });
+    });
+
+    describe('getFirstOfTwoDates', () => {
+        const d1: Date = ISODateToDate('2021-01-05');
+        const d2: Date = ISODateToDate('2021-01-06');
+
+        it('returns date1 if date1 is before date2', () => {
+            expect(dateToISODate(getFirstOfTwoDates(d1, d2))).toEqual('2021-01-05');
+        });
+
+        it('returns date2 if date1 is after date2', () => {
+            expect(dateToISODate(getFirstOfTwoDates(d2, d1))).toEqual('2021-01-05');
         });
     });
 });

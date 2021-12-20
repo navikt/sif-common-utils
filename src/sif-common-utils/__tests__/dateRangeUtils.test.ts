@@ -447,6 +447,14 @@ describe('dateRangeUtils', () => {
             expect(result[2]).toEqual('2021-02-07');
             expect(result[3]).toEqual('2021-02-08');
         });
+        it('it returns all dates in date range, including saturday and sunday if onlyWeekDays === undefined', () => {
+            const result = getISODatesInISODateRange('2021-02-05/2021-02-08');
+            expect(result.length).toBe(4);
+            expect(result[0]).toEqual('2021-02-05');
+            expect(result[1]).toEqual('2021-02-06');
+            expect(result[2]).toEqual('2021-02-07');
+            expect(result[3]).toEqual('2021-02-08');
+        });
     });
 
     describe('getDateRangesBetweenDateRanges', () => {

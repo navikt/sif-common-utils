@@ -60,6 +60,10 @@ export const isDateInDates = (date: Date, dates?: Date[]): boolean => {
 
 export const getYearMonthKey = (date: Date): string => dayjs(date).format('YYYY-MM');
 
+export const getFirstOfTwoDates = (date1: Date, date2: Date): Date => {
+    return dayjs(date1).isAfter(date2, 'day') ? date2 : date1;
+};
+
 const dateUtils = {
     dateToday,
     prettifyDate,

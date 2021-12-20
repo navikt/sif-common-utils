@@ -4,7 +4,7 @@ import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import minMax from 'dayjs/plugin/minMax';
 import { uniq } from 'lodash';
-import { DateRange, ISODate, ISODateRange, MaybeDateRange } from '.';
+import { DateRange, getFirstOfTwoDates, ISODate, ISODateRange, MaybeDateRange } from '.';
 import {
     isDateWeekDay,
     dateToISODate,
@@ -194,7 +194,7 @@ export const getWeeksInDateRange = (dateRange: DateRange): DateRange[] => {
         const weekDateRange: DateRange = { from: current.toDate(), to: current.endOf('isoWeek').toDate() };
         const rangeToPush: DateRange = {
             from: weekDateRange.from,
-            to: dayjs(weekDateRange.to).isAfter(dateRange.to, 'day') ? dateRange.to : weekDateRange.to,
+            to: getFirstOfTwoDates(weekDateRange.to, dateRange.to),
         };
         weeks.push(rangeToPush);
         current = current.add(1, 'week').startOf('isoWeek');
