@@ -14,6 +14,10 @@ export interface DateRange {
 export type MaybeDateRange = Partial<DateRange>;
 
 export interface Duration {
+    hours: number;
+    minutes: number;
+}
+export interface InputDuration {
     hours: string;
     minutes: string;
 }

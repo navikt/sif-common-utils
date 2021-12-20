@@ -13,7 +13,7 @@ const prettyDateFormat = 'DD.MM.YYYY';
 const prettyDateFormatExtended = 'D. MMM YYYY';
 const prettyDateFormatFull = 'D. MMMM YYYY';
 
-export const dateToday = dayjs().toDate();
+export const dateToday = dayjs.utc().toDate();
 
 export const prettifyDate = (date: Date): string => dayjs(date).format(prettyDateFormat);
 export const prettifyDateExtended = (date: Date) => dayjs(date).format(prettyDateFormatExtended);
@@ -47,7 +47,7 @@ export const getLastWeekDayInMonth = (month: Date): Date => {
     return isoWeekDay <= 5 ? lastDate.toDate() : lastDate.startOf('isoWeek').add(4, 'days').toDate();
 };
 
-export const dateIsWeekDay = (date: Date): boolean => {
+export const isDateWeekDay = (date: Date): boolean => {
     return dayjs(date).isoWeekday() <= 5;
 };
 
@@ -59,3 +59,19 @@ export const isDateInDates = (date: Date, dates?: Date[]): boolean => {
 };
 
 export const getYearMonthKey = (date: Date): string => dayjs(date).format('YYYY-MM');
+
+const dateUtils = {
+    dateToday,
+    prettifyDate,
+    prettifyDateExtended,
+    prettifyDateFull,
+    ISODateToDate,
+    dateToISODate,
+    getDatesInMonth,
+    isDateInDates,
+    isDateWeekDay,
+    getFirstWeekDayInMonth,
+    getLastWeekDayInMonth,
+};
+
+export default dateUtils;

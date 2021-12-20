@@ -1,11 +1,19 @@
 import { parse } from 'iso8601-duration';
-import { Duration, ISODuration } from '.';
+import { Duration, InputDuration, ISODuration } from '.';
 
-export const inputTimeToISODuration = ({ hours, minutes }: Partial<Duration>): ISODuration => {
+export const durationToISODuration = ({ hours, minutes }: Partial<Duration>): ISODuration => {
     return `PT${hours || 0}H${minutes || 0}M`;
 };
 
-export const ISODurationToInputTime = (duration: string): Duration | undefined => {
+export const ISODurationToDuration = (duration: string): Duration => {
+    const parts = parse(duration);
+    return {
+        hours: parts.hours || 0,
+        minutes: parts.minutes || 0,
+    };
+};
+
+export const ISODurationToInputDuration = (duration: string): InputDuration | undefined => {
     const parts = parse(duration);
     return parts
         ? {
@@ -19,25 +27,31 @@ export const decimalDurationToDuration = (duration: number): Duration => {
     const hours = Math.floor(duration);
     const minutes = Math.round(60 * (duration % 1));
     return {
-        hours: `${hours}`,
-        minutes: `${minutes}`,
+        hours,
+        minutes,
     };
 };
 
 export const durationToDecimalDuration = (duration: Duration): number => {
     const hours: number = typeof duration.hours === 'string' ? parseInt(duration.hours, 10) : duration.hours;
     const minutes: number = typeof duration.minutes === 'string' ? parseInt(duration.minutes, 10) : duration.minutes;
-    return (hours || 0) + ((100 / 60) * (minutes || 0)) / 100;
+    const decimalTime = (hours || 0) + ((100 / 60) * (minutes || 0)) / 100;
+    return Math.round(decimalTime * 100) / 100;
 };
 
+/**
+ * Validates duration as Time (max 59 minutes)
+ * @param duration
+ * @returns
+ */
 export const isValidDuration = (duration: Partial<Duration> | undefined): duration is Duration => {
     return (
         duration !== undefined &&
         duration.hours !== undefined &&
-        (typeof duration.hours === 'string' || !isNaN(duration.hours)) &&
+        !isNaN(duration.hours) &&
         duration.minutes !== undefined &&
-        (typeof duration.minutes === 'string' || !isNaN(duration.minutes)) &&
-        parseInt(duration.minutes, 10) < 60
+        !isNaN(duration.minutes) &&
+        duration.minutes < 60
     );
 };
 

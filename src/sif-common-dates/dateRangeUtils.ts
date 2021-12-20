@@ -6,7 +6,7 @@ import minMax from 'dayjs/plugin/minMax';
 import { uniq } from 'lodash';
 import { DateRange, ISODate, ISODateRange, MaybeDateRange } from '.';
 import {
-    dateIsWeekDay,
+    isDateWeekDay,
     dateToISODate,
     getFirstWeekDayInMonth,
     getLastWeekDayInMonth,
@@ -215,7 +215,7 @@ export const getDatesInDateRange = (dateRange: DateRange, onlyWeekDays = false):
     let current = dayjs(dateRange.from); //.subtract(dayjs(range.from).isoWeekday() - 1, 'days');
     do {
         const date = current.toDate();
-        if (onlyWeekDays === false || dateIsWeekDay(date)) {
+        if (onlyWeekDays === false || isDateWeekDay(date)) {
             dates.push(date);
         }
         current = current.add(1, 'day');
@@ -347,7 +347,7 @@ export const dateRangeToISODateRange = (dateRange: DateRange): ISODateRange => {
 export const getISODatesInISODateRangeWeekendExcluded = (range: ISODateRange): ISODate[] => {
     const dateRange = ISODateRangeToDateRange(range);
     return getDatesInDateRange(dateRange)
-        .filter((date) => dateIsWeekDay(date))
+        .filter((date) => isDateWeekDay(date))
         .map((date) => dateToISODate(date));
 };
 

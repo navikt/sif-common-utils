@@ -1,5 +1,5 @@
 import {
-    dateIsWeekDay,
+    isDateWeekDay,
     dateToISODate,
     getDatesInMonth,
     getFirstWeekDayInMonth,
@@ -83,13 +83,13 @@ describe('dateUtils', () => {
     });
     describe('dateIsWeekDay', () => {
         it('mon-fri is weekday, sat-sun is not', () => {
-            expect(dateIsWeekDay(ISODateToDate('2020-01-06'))).toBeTruthy();
-            expect(dateIsWeekDay(ISODateToDate('2020-01-07'))).toBeTruthy();
-            expect(dateIsWeekDay(ISODateToDate('2020-01-08'))).toBeTruthy();
-            expect(dateIsWeekDay(ISODateToDate('2020-01-09'))).toBeTruthy();
-            expect(dateIsWeekDay(ISODateToDate('2020-01-10'))).toBeTruthy();
-            expect(dateIsWeekDay(ISODateToDate('2020-01-11'))).toBeFalsy();
-            expect(dateIsWeekDay(ISODateToDate('2020-01-12'))).toBeFalsy();
+            expect(isDateWeekDay(ISODateToDate('2020-01-06'))).toBeTruthy();
+            expect(isDateWeekDay(ISODateToDate('2020-01-07'))).toBeTruthy();
+            expect(isDateWeekDay(ISODateToDate('2020-01-08'))).toBeTruthy();
+            expect(isDateWeekDay(ISODateToDate('2020-01-09'))).toBeTruthy();
+            expect(isDateWeekDay(ISODateToDate('2020-01-10'))).toBeTruthy();
+            expect(isDateWeekDay(ISODateToDate('2020-01-11'))).toBeFalsy();
+            expect(isDateWeekDay(ISODateToDate('2020-01-12'))).toBeFalsy();
         });
     });
     describe('isDateInDates', () => {
