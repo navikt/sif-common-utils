@@ -109,7 +109,7 @@ export const dateIsWithinMaybeDateRange = (date: Date, dateRange: MaybeDateRange
     if (dateRange.to) {
         return dayjs(date).isSameOrBefore(dateRange.to);
     }
-    return true;
+    return false;
 };
 
 /**
@@ -344,10 +344,15 @@ export const dateRangeToISODateRange = (dateRange: DateRange): ISODateRange => {
     return `${dateToISODate(dateRange.from)}/${dateToISODate(dateRange.to)}`;
 };
 
-export const getISODatesInISODateRangeWeekendExcluded = (range: ISODateRange): ISODate[] => {
+/**
+ * Returns all dates in date range as ISODates, weekends excluded
+ * @param range
+ * @returns
+ */
+export const getISODatesInISODateRange = (range: ISODateRange, onlyWeekDays = false): ISODate[] => {
     const dateRange = ISODateRangeToDateRange(range);
     return getDatesInDateRange(dateRange)
-        .filter((date) => isDateWeekDay(date))
+        .filter((date) => (onlyWeekDays ? isDateWeekDay(date) : true))
         .map((date) => dateToISODate(date));
 };
 

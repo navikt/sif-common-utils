@@ -25,3 +25,5 @@ yarn-debug.log*
 yarn-error.log*
 
 /lib
+/coverage
+/src/sif-common-dates/coverage

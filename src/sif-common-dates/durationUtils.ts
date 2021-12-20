@@ -1,5 +1,5 @@
 import { parse } from 'iso8601-duration';
-import { Duration, InputDuration, ISODuration } from '.';
+import { Duration, InputDuration, ISODuration, MaybeDuration } from '.';
 
 export const durationToISODuration = ({ hours, minutes }: Partial<Duration>): ISODuration => {
     return `PT${hours || 0}H${minutes || 0}M`;
@@ -14,13 +14,15 @@ export const ISODurationToDuration = (duration: string): Duration => {
 };
 
 export const ISODurationToInputDuration = (duration: string): InputDuration | undefined => {
-    const parts = parse(duration);
-    return parts
-        ? {
-              hours: `${parts.hours}`,
-              minutes: `${parts.minutes}`,
-          }
-        : undefined;
+    try {
+        const parts = parse(duration);
+        return {
+            hours: `${parts.hours}`,
+            minutes: `${parts.minutes}`,
+        };
+    } catch (e) {
+        return undefined;
+    }
 };
 
 export const decimalDurationToDuration = (duration: number): Duration => {
@@ -32,10 +34,13 @@ export const decimalDurationToDuration = (duration: number): Duration => {
     };
 };
 
-export const durationToDecimalDuration = (duration: Duration): number => {
-    const hours: number = typeof duration.hours === 'string' ? parseInt(duration.hours, 10) : duration.hours;
-    const minutes: number = typeof duration.minutes === 'string' ? parseInt(duration.minutes, 10) : duration.minutes;
-    const decimalTime = (hours || 0) + ((100 / 60) * (minutes || 0)) / 100;
+export const maybeDurationToDecimalDuration = (maybeDuration: MaybeDuration): number => {
+    const duration = { hours: maybeDuration.hours || 0, minutes: maybeDuration.minutes || 0 };
+    return durationToDecimalDuration(duration);
+};
+
+export const durationToDecimalDuration = (maybeDuration: Duration): number => {
+    const decimalTime = (maybeDuration.hours || 0) + ((100 / 60) * (maybeDuration.minutes || 0)) / 100;
     return Math.round(decimalTime * 100) / 100;
 };
 
@@ -54,6 +59,16 @@ export const isValidDuration = (duration: Partial<Duration> | undefined): durati
         duration.minutes < 60
     );
 };
+
+const durationUtils = {
+    durationToISODuration,
+    durationToDecimalDuration,
+    decimalDurationToDuration,
+    isValidDuration,
+    ISODurationToInputDuration,
+};
+
+export default durationUtils;
 
 // /**
 //  *

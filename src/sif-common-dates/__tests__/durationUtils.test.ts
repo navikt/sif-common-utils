@@ -3,7 +3,9 @@ import {
     durationToDecimalDuration,
     durationToISODuration,
     ISODurationToDuration,
+    ISODurationToInputDuration,
     isValidDuration,
+    maybeDurationToDecimalDuration,
 } from '..';
 
 describe('durationUtils', () => {
@@ -46,6 +48,20 @@ describe('durationUtils', () => {
             expect(durationToDecimalDuration({ hours: 1, minutes: 59 })).toEqual(1.98);
         });
     });
+    describe('maybeDurationToDecimalDuration', () => {
+        it('converts undefined hour and 2 minutes correctly', () => {
+            expect(maybeDurationToDecimalDuration({ minutes: 30 })).toEqual(0.5);
+        });
+        it('converts one hour and undefined minutes correctly', () => {
+            expect(maybeDurationToDecimalDuration({ hours: 1 })).toEqual(1);
+        });
+        it('converts 1 hour and 30 minutes correctly', () => {
+            expect(maybeDurationToDecimalDuration({ hours: 1, minutes: 30 })).toEqual(1.5);
+        });
+        it('converts 1 hour and 59 minutes correctly', () => {
+            expect(maybeDurationToDecimalDuration({ hours: 1, minutes: 59 })).toEqual(1.98);
+        });
+    });
     describe('decimalDurationToDuration', () => {
         it('converts 1 hour correctly', () => {
             const result = decimalDurationToDuration(1);
@@ -61,6 +77,19 @@ describe('durationUtils', () => {
             const result = decimalDurationToDuration(1.98);
             expect(result.hours).toEqual(1);
             expect(result.minutes).toEqual(59);
+        });
+    });
+    describe('ISODurationToInputDuration', () => {
+        it('returns undefined if duration is invalid', () => {
+            expect(ISODurationToInputDuration('TABC')).toBeFalsy();
+        });
+        it('returns correct input duration when duration is valid', () => {
+            expect(ISODurationToInputDuration('PT1H')?.hours).toEqual('1');
+            expect(ISODurationToInputDuration('PT1M')?.minutes).toEqual('1');
+        });
+        it('returns 0 hours and 0 minutes when duration is valid, but hours and minutes not set', () => {
+            expect(ISODurationToInputDuration('PT')?.hours).toEqual('0');
+            expect(ISODurationToInputDuration('PT')?.minutes).toEqual('0');
         });
     });
     describe('isValidDuration', () => {

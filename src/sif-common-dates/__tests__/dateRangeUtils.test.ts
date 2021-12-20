@@ -5,12 +5,18 @@ import {
     dateIsWithinMaybeDateRange,
     DateRange,
     dateRangesCollide,
+    dateRangeToISODateRange,
     datesCollideWithDateRanges,
     dateToISODate,
+    getDateRangeFromDateRanges,
     getDatesInDateRange,
+    getISODatesInISODateRange,
     getMonthsInDateRange,
     getWeekDateRange,
+    getYearsInDateRanges,
     isDateRange,
+    ISODateRangeToDateRange,
+    ISODateRangeToISODates,
     ISODateToDate,
     sortDateRange,
     sortDateRangeByToDate,
@@ -90,6 +96,9 @@ describe('dateRangeUtils', () => {
         it('detects collision when last-date and from-date is same date, and not set to be allowed', () => {
             expect(dateRangesCollide([dateRange1, dateRange3], false)).toBeTruthy();
         });
+        it('detects no collision when array is empty', () => {
+            expect(dateRangesCollide([], false)).toBeFalsy();
+        });
     });
     describe('datesCollideWithDateRanges', () => {
         const dateBefore = ISODateToDate('2020-02-01');
@@ -124,6 +133,9 @@ describe('dateRangeUtils', () => {
         const from = ISODateToDate('2020-01-02');
         const to = ISODateToDate('2020-01-05');
 
+        it('returnerer true når dato er innenfor gyldig dateRange', () => {
+            expect(dateIsWithinMaybeDateRange(date, { from, to })).toBeTruthy();
+        });
         it('returnerer true når to-date ikke er satt og dato er lik eller etter from-date', () => {
             expect(dateIsWithinMaybeDateRange(date, { from: date })).toBeTruthy();
             expect(dateIsWithinMaybeDateRange(date, { from })).toBeTruthy();
@@ -137,6 +149,9 @@ describe('dateRangeUtils', () => {
         });
         it('returnerer false når from-date ikke er satt og dato er etter to-date', () => {
             expect(dateIsWithinMaybeDateRange(date, { to: from })).toBeFalsy();
+        });
+        it('returnerer false når date range er ugyldig', () => {
+            expect(dateIsWithinMaybeDateRange(date, {})).toBeFalsy();
         });
     });
     describe('dateIsInDateRange', () => {
@@ -280,9 +295,31 @@ describe('dateRangeUtils', () => {
             expect(dateToISODate(result[32])).toEqual('2020-02-14');
         });
     });
-    // describe('getYearsInDateRanges', () => {
-    //     it('');
-    // });
+    describe('getYearsInDateRanges', () => {
+        it('returnerer alle år hentet ut fra .from verdien', () => {
+            const dateRanges: DateRange[] = [
+                { from: ISODateToDate('2010-01-01'), to: ISODateToDate('2010-02-01') },
+                { from: ISODateToDate('2020-01-01'), to: ISODateToDate('2020-02-01') },
+            ];
+            const result = getYearsInDateRanges(dateRanges);
+            expect(result.length).toBe(2);
+            expect(result[0]).toEqual(2010);
+            expect(result[1]).toEqual(2020);
+        });
+    });
+
+    describe('getDateRangeFromDateRanges', () => {
+        const dateRanges: DateRange[] = [
+            { from: ISODateToDate('2010-01-01'), to: ISODateToDate('2010-02-01') },
+            { from: ISODateToDate('2020-01-01'), to: ISODateToDate('2020-02-01') },
+        ];
+        it('gets the spanning date range for multiple date ranges', () => {
+            const result = getDateRangeFromDateRanges(dateRanges);
+            expect(dateToISODate(result.from)).toEqual('2010-01-01');
+            expect(dateToISODate(result.to)).toEqual('2020-02-01');
+        });
+    });
+
     describe('getNumberOfDaysInDateRange', () => {
         describe('Når en teller med helgedager', () => {
             it('returnerer 1 når det er samme fra og til dato', () => {
@@ -338,6 +375,14 @@ describe('dateRangeUtils', () => {
             });
         });
     });
+    describe('ISODateRangeToDateRange', () => {
+        it('converts ISODateRange correctly', () => {
+            const result = ISODateRangeToDateRange('2020-01-01/2021-01-1');
+            expect(dateToISODate(result.from)).toEqual('2020-01-01');
+            expect(dateToISODate(result.to)).toEqual('2021-01-01');
+        });
+    });
+
     describe('getDatesInMonthOutsideDateRange', () => {
         it('returnerer alle dager i måned før fra-dato i periode', () => {
             const result = getDatesInMonthOutsideDateRange(ISODateToDate('2021-01-01'), {
@@ -363,6 +408,42 @@ describe('dateRangeUtils', () => {
                 to: ISODateToDate('2021-01-01'),
             });
             expect(dateToISODate(result[0])).toEqual('2021-01-02');
+        });
+    });
+
+    describe('ISODateRangeToISODates', () => {
+        it('splits an ISODateRange into ISODates', () => {
+            const result = ISODateRangeToISODates('2021-01-01/2021-01-10');
+            expect(result.from).toEqual('2021-01-01');
+            expect(result.to).toEqual('2021-01-10');
+        });
+    });
+
+    describe('dateRangeToISODateRange', () => {
+        it('converts dateRange to ISODateRange', () => {
+            expect(
+                dateRangeToISODateRange({
+                    from: ISODateToDate('2021-01-01'),
+                    to: ISODateToDate('2021-01-28'),
+                })
+            ).toEqual('2021-01-01/2021-01-28');
+        });
+    });
+
+    describe('getISODatesInISODateRange', () => {
+        it('it returns all dates in date range, excluding saturday and sunday if onlyWeekDays === true', () => {
+            const result = getISODatesInISODateRange('2021-02-05/2021-02-08', true);
+            expect(result.length).toBe(2);
+            expect(result[0]).toEqual('2021-02-05');
+            expect(result[1]).toEqual('2021-02-08');
+        });
+        it('it returns all dates in date range, including saturday and sunday if onlyWeekDays === false', () => {
+            const result = getISODatesInISODateRange('2021-02-05/2021-02-08', false);
+            expect(result.length).toBe(4);
+            expect(result[0]).toEqual('2021-02-05');
+            expect(result[1]).toEqual('2021-02-06');
+            expect(result[2]).toEqual('2021-02-07');
+            expect(result[3]).toEqual('2021-02-08');
         });
     });
 });
