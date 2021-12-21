@@ -40,9 +40,11 @@ export type DurationWeekdays = {
     [Weekday.friday]?: InputDuration;
 };
 
-export interface DurationPerDay {
+export interface WorkDuration {
     duration: Partial<InputDuration>;
     percentage?: number;
 }
 
-export type DateDurationMap = { [isoDate: ISODate]: DurationPerDay };
+export type WorkDurationMap = { [isoDate: ISODate]: WorkDuration };
+
+export type DurationMap = { [isoDate: ISODate]: Duration | InputDuration };

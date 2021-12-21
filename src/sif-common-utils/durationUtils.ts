@@ -1,6 +1,6 @@
 import { parse } from 'iso8601-duration';
 import { trim } from 'lodash';
-import { Duration, InputDuration, ISODuration } from '.';
+import { WorkDurationMap, Duration, InputDuration, ISODuration, DurationMap } from '.';
 
 export const getNumberValue = (value: any): number | 'invalidNumberValue' | undefined => {
     if (typeof value === 'number') {
@@ -56,7 +56,7 @@ export const durationToISODuration = ({ hours, minutes }: Partial<Duration | Inp
     return `PT${hours || 0}H${minutes || 0}M`;
 };
 
-export const durationsAreEqual = (
+export const durationsAreSame = (
     duration1?: Partial<InputDuration | Duration>,
     duration2?: Partial<InputDuration | Duration>
 ): boolean => {
@@ -150,6 +150,24 @@ export const isValidDuration = (duration: Partial<Duration | InputDuration> | un
     }
     const dur = ensureDurationIgnoreInvalid({ hours, minutes });
     return dur.hours >= 0 && dur.minutes >= 0 && dur.minutes < 60;
+};
+
+/**
+ * Get all durations which is different in durations1 from durations2
+ * @param durations1
+ * @param durations2
+ * @returns
+ */
+export const getDurationsDiff = (durations1: DurationMap, durations2: DurationMap): DurationMap => {
+    const resultMap: DurationMap = {};
+    Object.keys(durations1).forEach((isoDate) => {
+        const oldValue = durations2[isoDate];
+        if (oldValue && durationsAreSame(durations1[isoDate], oldValue)) {
+            return;
+        }
+        resultMap[isoDate] = durations1[isoDate];
+    });
+    return resultMap;
 };
 
 const durationUtils = {

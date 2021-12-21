@@ -1,24 +1,23 @@
-import { DateDurationMap, ISODateToDate } from '..';
+import { WorkDurationMap, ISODateToDate } from '..';
 import {
-    removeInvalidDurations,
-    durationPerDayIsSame,
-    getChangedDateDurations,
-    getDatesWithDurationInDateRange,
+    getValidWorkDurations,
+    workDurationIsSame,
+    getWorkDurationDiff,
+    getValidWorkDurationInDateRange,
     getNumberOfDatesWithDurationLongerThanZero,
-    summarizeDateDurationMap,
-    summarizeDurationWeekDays,
-} from '../dateDurationUtils';
+    summarizeWorkDurationMap,
+} from '../workDurationUtils';
 
-describe('dateDurationUtils', () => {
+describe('workDurationUtils', () => {
     describe('removeInvalidDurations', () => {
         it('removes duration which has duration with undefined hours and minutes', () => {
-            const result = removeInvalidDurations({
+            const result = getValidWorkDurations({
                 '2021-02-05': { duration: {} },
             });
             expect(Object.keys(result).length).toBe(0);
         });
         it('removes duration which has duration with invalid values in hours or minutes', () => {
-            const result = removeInvalidDurations({
+            const result = getValidWorkDurations({
                 '2021-02-05': { duration: { hours: 'a', minutes: '0' } },
             });
             expect(Object.keys(result).length).toBe(0);
@@ -26,54 +25,31 @@ describe('dateDurationUtils', () => {
         it('does not remove duration which is valid', () => {
             expect(
                 Object.keys(
-                    removeInvalidDurations({
+                    getValidWorkDurations({
                         '2021-02-05': { duration: { hours: '0', minutes: '0' } },
                     })
                 ).length
             ).toBe(1);
             expect(
                 Object.keys(
-                    removeInvalidDurations({
+                    getValidWorkDurations({
                         '2021-02-05': { duration: { hours: '', minutes: '0' } },
                     })
                 ).length
             ).toBe(1);
             expect(
                 Object.keys(
-                    removeInvalidDurations({
+                    getValidWorkDurations({
                         '2021-02-05': { duration: { hours: '1' } },
                     })
                 ).length
             ).toBe(1);
         });
     });
-    describe('summarizeDurationWeekDays', () => {
-        it('sum hours correctly', () => {
-            const sum = summarizeDurationWeekDays({
-                monday: { hours: '1', minutes: '0' },
-                tuesday: { hours: '1', minutes: '0' },
-                wednesday: { hours: '1', minutes: '0' },
-                thursday: { hours: '1', minutes: '0' },
-                friday: { hours: '1', minutes: '0' },
-            });
-            expect(sum.hours).toBe(5);
-            expect(sum.minutes).toBe(0);
-        });
-        it('sum hours and minutes correctly', () => {
-            const sum = summarizeDurationWeekDays({
-                monday: { hours: '1', minutes: '5' },
-                tuesday: { hours: '1', minutes: '5' },
-                wednesday: { hours: '1', minutes: '5' },
-                thursday: { hours: '1', minutes: '5' },
-                friday: { hours: '1', minutes: '10' },
-            });
-            expect(sum.hours).toBe(5);
-            expect(sum.minutes).toBe(30);
-        });
-    });
-    describe('summarizeDateDurationMap', () => {
+
+    describe('summarizeWorkDurationMap', () => {
         it('sums correctly', () => {
-            const result = summarizeDateDurationMap({
+            const result = summarizeWorkDurationMap({
                 '2021-01-01': { duration: { hours: '1', minutes: '2' } },
                 '2021-01-02': { duration: { hours: '1', minutes: '2' } },
                 '2021-01-03': { duration: { hours: '1', minutes: '2' } },
@@ -113,30 +89,30 @@ describe('dateDurationUtils', () => {
             ).toBe(0);
         });
     });
-    describe('getChangedDateDurations', () => {
+    describe('getWorkDurationDiff', () => {
         it('removes equal values', () => {
-            const result = getChangedDateDurations(
+            const result = getWorkDurationDiff(
                 { '2021-01-01': { duration: { hours: '1', minutes: '2' } } },
                 { '2021-01-01': { duration: { hours: '1', minutes: '2' } } }
             );
             expect(Object.keys(result).length).toBe(0);
         });
         it('returns changed values', () => {
-            const result = getChangedDateDurations(
+            const result = getWorkDurationDiff(
                 { '2021-01-01': { duration: { hours: '1', minutes: '2' } } },
                 { '2021-01-01': { duration: { hours: '2', minutes: '2' } } }
             );
             expect(Object.keys(result).length).toBe(1);
         });
         it('returns new values', () => {
-            const result = getChangedDateDurations({ '2021-01-01': { duration: { hours: '1', minutes: '2' } } }, {});
+            const result = getWorkDurationDiff({ '2021-01-01': { duration: { hours: '1', minutes: '2' } } }, {});
             expect(Object.keys(result).length).toBe(1);
         });
     });
     describe('durationPerDayIsSame', () => {
         it('returns true when durations is the same', () => {
             expect(
-                durationPerDayIsSame(
+                workDurationIsSame(
                     { duration: { hours: '0', minutes: '1' } },
                     { duration: { hours: '0', minutes: '1' } }
                 )
@@ -144,7 +120,7 @@ describe('dateDurationUtils', () => {
         });
         it('returns true when percentage is the same', () => {
             expect(
-                durationPerDayIsSame(
+                workDurationIsSame(
                     { percentage: 100, duration: { hours: '0', minutes: '1' } },
                     { percentage: 100, duration: { hours: '0', minutes: '1' } }
                 )
@@ -152,15 +128,15 @@ describe('dateDurationUtils', () => {
         });
         it('returns false when percentage is not the same', () => {
             expect(
-                durationPerDayIsSame(
+                workDurationIsSame(
                     { percentage: 100, duration: { hours: '0', minutes: '1' } },
                     { percentage: 99, duration: { hours: '0', minutes: '1' } }
                 )
             ).toBeFalsy();
         });
     });
-    describe('getDatesWithDurationInDateRange', () => {
-        const data: DateDurationMap = {
+    describe('getValidWorkDurationInDateRange', () => {
+        const data: WorkDurationMap = {
             '2021-01-01': { duration: { hours: '1', minutes: '2' } },
             '2021-01-02': { duration: { hours: '1', minutes: '2' } },
             '2021-01-03': { duration: { hours: '1', minutes: '2' } },
@@ -169,7 +145,7 @@ describe('dateDurationUtils', () => {
         };
 
         it('returns only dates within the date range', () => {
-            const result = getDatesWithDurationInDateRange(data, {
+            const result = getValidWorkDurationInDateRange(data, {
                 from: ISODateToDate('2021-01-02'),
                 to: ISODateToDate('2021-01-03'),
             });

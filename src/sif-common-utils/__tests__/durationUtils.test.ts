@@ -4,7 +4,7 @@ import {
     Duration,
     durationAsInputDuration,
     durationIsZero,
-    durationsAreEqual,
+    durationsAreSame,
     durationToDecimalDuration,
     durationToISODuration,
     ensureDurationIgnoreInvalid,
@@ -15,6 +15,7 @@ import {
     ISODurationToInputDuration,
     isValidDuration,
 } from '../';
+import { getDurationsDiff } from '../durationUtils';
 
 describe('durationUtils', () => {
     describe('getNumberValue', () => {
@@ -254,25 +255,45 @@ describe('durationUtils', () => {
             expect(duration.minutes).toEqual('2');
         });
     });
-    describe('durationsAreEqual', () => {
+    describe('durationsAreSame', () => {
         const dur1: Duration = ISODurationToDuration('PT2H0M');
         const dur2: Duration = ISODurationToDuration('PT2H0M');
         const dur3: Duration = ISODurationToDuration('PT3H0M');
 
         it('returns true if both are undefined', () => {
-            expect(durationsAreEqual(undefined, undefined)).toBeTruthy();
+            expect(durationsAreSame(undefined, undefined)).toBeTruthy();
         });
 
         it('returns true when equal durations', () => {
-            expect(durationsAreEqual(dur1, dur2)).toBeTruthy();
+            expect(durationsAreSame(dur1, dur2)).toBeTruthy();
         });
 
         it('returns false if only one of them are undefined', () => {
-            expect(durationsAreEqual(dur1, undefined)).toBeFalsy();
-            expect(durationsAreEqual(undefined, dur1)).toBeFalsy();
+            expect(durationsAreSame(dur1, undefined)).toBeFalsy();
+            expect(durationsAreSame(undefined, dur1)).toBeFalsy();
         });
         it('returns false when not equal durations', () => {
-            expect(durationsAreEqual(dur1, dur3)).toBeFalsy();
+            expect(durationsAreSame(dur1, dur3)).toBeFalsy();
+        });
+    });
+    describe('getDurationsDiff', () => {
+        it('removes equal values', () => {
+            const result = getDurationsDiff(
+                { '2021-01-01': { hours: '1', minutes: '2' } },
+                { '2021-01-01': { hours: '1', minutes: '2' } }
+            );
+            expect(Object.keys(result).length).toBe(0);
+        });
+        it('returns changed values', () => {
+            const result = getDurationsDiff(
+                { '2021-01-01': { hours: '1', minutes: '2' } },
+                { '2021-01-01': { hours: '2', minutes: '2' } }
+            );
+            expect(Object.keys(result).length).toBe(1);
+        });
+        it('returns new values', () => {
+            const result = getDurationsDiff({ '2021-01-01': { hours: '1', minutes: '2' } }, {});
+            expect(Object.keys(result).length).toBe(1);
         });
     });
 });

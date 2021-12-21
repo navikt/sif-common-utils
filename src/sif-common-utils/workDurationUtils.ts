@@ -6,12 +6,11 @@ import minMax from 'dayjs/plugin/minMax';
 import {
     dateIsInDateRange,
     DateRange,
-    DateDurationMap,
+    WorkDurationMap,
     durationIsZero,
     ISODateToDate,
     isValidDuration,
-    DurationPerDay,
-    DurationWeekdays,
+    WorkDuration,
     Duration,
     summarizeDurations,
     ensureDurationIgnoreInvalid,
@@ -25,80 +24,81 @@ dayjs.extend(isBetween);
 dayjs.extend(minMax);
 
 /**
- * Fjerner alle dager som har ugyldig tid
- * @param durationMap
- * @returns DateDurationMap
+ * Get all dates with valid duration
+ * @param workDurationMap
+ * @returns
  */
-export const removeInvalidDurations = (durationMap: DateDurationMap): DateDurationMap => {
-    const cleanMap: DateDurationMap = {};
-    Object.keys(durationMap).forEach((key) => {
-        const dateDuration = durationMap[key];
-        if (dateDuration && isValidDuration(dateDuration.duration)) {
-            cleanMap[key] = { ...dateDuration };
+export const getValidWorkDurations = (workDurationMap: WorkDurationMap): WorkDurationMap => {
+    const cleanMap: WorkDurationMap = {};
+    Object.keys(workDurationMap).forEach((key) => {
+        const workDuration = workDurationMap[key];
+        if (workDuration && isValidDuration(workDuration.duration)) {
+            cleanMap[key] = { ...workDuration };
         }
     });
     return cleanMap;
 };
 
-export const summarizeDurationWeekDays = (weekdays: DurationWeekdays): Duration => {
-    return summarizeDurations([
-        weekdays.monday,
-        weekdays.tuesday,
-        weekdays.wednesday,
-        weekdays.thursday,
-        weekdays.friday,
-    ]);
-};
-
-export const summarizeDateDurationMap = (dateDuration: DateDurationMap): Duration => {
-    const durations = Object.keys(dateDuration).map((key) => ensureDurationIgnoreInvalid(dateDuration[key].duration));
+/**
+ * Summarize all duration
+ * @param workDuration
+ * @returns
+ */
+export const summarizeWorkDurationMap = (workDuration: WorkDurationMap): Duration => {
+    const durations = Object.keys(workDuration).map((key) => ensureDurationIgnoreInvalid(workDuration[key].duration));
     return summarizeDurations(durations);
 };
 
-export const getNumberOfDatesWithDurationLongerThanZero = (dateDurationMap: DateDurationMap): number =>
-    Object.keys(dateDurationMap).filter((key) => {
-        const duration = ensureInputDuration(dateDurationMap[key].duration);
+/**
+ * Get number of dates which has a valid duration and a duration longer than zero
+ * @param workDurationMap
+ * @returns
+ */
+export const getNumberOfDatesWithDurationLongerThanZero = (workDurationMap: WorkDurationMap): number =>
+    Object.keys(workDurationMap).filter((key) => {
+        const duration = ensureInputDuration(workDurationMap[key].duration);
 
         return durationIsZero(duration) === false;
     }).length;
 
-export const getChangedDateDurations = (
-    newDurations: DateDurationMap,
-    oldDurations: DateDurationMap
-): DateDurationMap => {
-    const resultMap: DateDurationMap = {};
-    Object.keys(newDurations).forEach((isoDate) => {
-        const oldValue = oldDurations[isoDate];
-        if (oldValue && durationPerDayIsSame(newDurations[isoDate], oldValue)) {
+/**
+ * Get all durations which are different in durations1 from durations2
+ * @param durations1
+ * @param durations2
+ * @returns
+ */
+export const getWorkDurationDiff = (durations1: WorkDurationMap, durations2: WorkDurationMap): WorkDurationMap => {
+    const resultMap: WorkDurationMap = {};
+    Object.keys(durations1).forEach((isoDate) => {
+        const oldValue = durations2[isoDate];
+        if (oldValue && workDurationIsSame(durations1[isoDate], oldValue)) {
             return;
         }
-        resultMap[isoDate] = newDurations[isoDate];
+        resultMap[isoDate] = durations1[isoDate];
     });
     return resultMap;
 };
 
 /**
  * Get all dates with duration in date range
- * @param dateDurationMap
+ * @param workDurationMap
  * @param dateRange
- * @returns DateDurationMap
+ * @returns WorkDurationMap
  */
-export const getDatesWithDurationInDateRange = (
-    dateDurationMap: DateDurationMap,
+export const getValidWorkDurationInDateRange = (
+    workDurationMap: WorkDurationMap,
     dateRange: DateRange
-): DateDurationMap => {
-    const resultMap: DateDurationMap = {};
-    Object.keys(dateDurationMap).forEach((isoDate) => {
+): WorkDurationMap => {
+    const validWorkInDateRange: WorkDurationMap = {};
+    const validWork = getValidWorkDurations(workDurationMap);
+    Object.keys(validWork).forEach((isoDate) => {
         const date = ISODateToDate(isoDate);
         if (date && dateIsInDateRange(date, dateRange)) {
-            const duration = dateDurationMap[isoDate];
-            if (duration) {
-                resultMap[isoDate] = duration;
-            }
+            validWorkInDateRange[isoDate] = workDurationMap[isoDate];
         }
         return false;
     });
-    return resultMap;
+    return validWorkInDateRange;
 };
 
 /**
@@ -107,7 +107,7 @@ export const getDatesWithDurationInDateRange = (
  * @param duration2
  * @returns boolean
  */
-export const durationPerDayIsSame = (duration1: DurationPerDay, duration2: DurationPerDay): boolean => {
+export const workDurationIsSame = (duration1: WorkDuration, duration2: WorkDuration): boolean => {
     if (duration1.percentage !== undefined && duration2.percentage !== undefined) {
         return duration1.percentage === duration2.percentage;
     }
@@ -122,7 +122,7 @@ export const durationPerDayIsSame = (duration1: DurationPerDay, duration2: Durat
 //     datoer: ISODate[];
 // }
 
-// export const getPerioderMedLikTidIDatoTidMap = (datoTidMap: DateDurationMap): PeriodeMedDatoTid[] => {
+// export const getPerioderMedLikTidIDatoTidMap = (datoTidMap: WorkDurationMap): PeriodeMedDatoTid[] => {
 //     const dagerMedTid = Object.keys(datoTidMap)
 //         .sort((d1, d2): number => (dayjs(ISODateToDate(d1)).isBefore(ISODateToDate(d2), 'day') ? -1 : 1))
 //         .map((key, index, arr) => {
