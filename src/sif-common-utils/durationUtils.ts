@@ -1,6 +1,6 @@
 import { parse } from 'iso8601-duration';
 import { trim } from 'lodash';
-import { WorkDurationMap, Duration, InputDuration, ISODuration, DurationMap } from '.';
+import { Duration, InputDuration, ISODuration, DateDurationMap } from '.';
 
 export const getNumberValue = (value: any): number | 'invalidNumberValue' | undefined => {
     if (typeof value === 'number') {
@@ -158,8 +158,8 @@ export const isValidDuration = (duration: Partial<Duration | InputDuration> | un
  * @param durations2
  * @returns
  */
-export const getDurationsDiff = (durations1: DurationMap, durations2: DurationMap): DurationMap => {
-    const resultMap: DurationMap = {};
+export const getDurationsDiff = (durations1: DateDurationMap, durations2: DateDurationMap): DateDurationMap => {
+    const resultMap: DateDurationMap = {};
     Object.keys(durations1).forEach((isoDate) => {
         const oldValue = durations2[isoDate];
         if (oldValue && durationsAreSame(durations1[isoDate], oldValue)) {
