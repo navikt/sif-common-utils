@@ -54,7 +54,7 @@ export const summarizeWorkDurationMap = (workDuration: WorkDurationMap): Duratio
  * @param workDurationMap
  * @returns
  */
-export const getNumberOfDatesWithDurationLongerThanZero = (workDurationMap: WorkDurationMap): number =>
+export const getDatesWithWorkDurationLongerThanZero = (workDurationMap: WorkDurationMap): number =>
     Object.keys(workDurationMap).filter((key) => {
         const duration = ensureInputDuration(workDurationMap[key].duration);
 

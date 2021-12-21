@@ -4,7 +4,7 @@ import {
     workDurationIsSame,
     getWorkDurationDiff,
     getValidWorkDurationInDateRange,
-    getNumberOfDatesWithDurationLongerThanZero,
+    getDatesWithWorkDurationLongerThanZero,
     summarizeWorkDurationMap,
 } from '../workDurationUtils';
 
@@ -61,29 +61,27 @@ describe('workDurationUtils', () => {
         });
     });
 
-    describe('getNumberOfDatesWithDurationLongerThanZero', () => {
+    describe('getDatesWithWorkDurationLongerThanZero', () => {
         it('includes date with minutes', () => {
-            expect(getNumberOfDatesWithDurationLongerThanZero({ '2021-01-01': { duration: { minutes: '2' } } })).toBe(
-                1
-            );
+            expect(getDatesWithWorkDurationLongerThanZero({ '2021-01-01': { duration: { minutes: '2' } } })).toBe(1);
         });
         it('includes date with hours', () => {
-            expect(getNumberOfDatesWithDurationLongerThanZero({ '2021-01-01': { duration: { hours: '1' } } })).toBe(1);
+            expect(getDatesWithWorkDurationLongerThanZero({ '2021-01-01': { duration: { hours: '1' } } })).toBe(1);
         });
         it('excludes date with 0 minutes and 0 hours', () => {
             expect(
-                getNumberOfDatesWithDurationLongerThanZero({ '2021-01-01': { duration: { hours: '0', minutes: '0' } } })
+                getDatesWithWorkDurationLongerThanZero({ '2021-01-01': { duration: { hours: '0', minutes: '0' } } })
             ).toBe(0);
         });
         it('excludes date with invalid duration', () => {
             expect(
-                getNumberOfDatesWithDurationLongerThanZero({ '2021-01-01': { duration: { hours: 'a', minutes: '0' } } })
+                getDatesWithWorkDurationLongerThanZero({ '2021-01-01': { duration: { hours: 'a', minutes: '0' } } })
             ).toBe(0);
             expect(
-                getNumberOfDatesWithDurationLongerThanZero({ '2021-01-01': { duration: { hours: '0', minutes: 'a' } } })
+                getDatesWithWorkDurationLongerThanZero({ '2021-01-01': { duration: { hours: '0', minutes: 'a' } } })
             ).toBe(0);
             expect(
-                getNumberOfDatesWithDurationLongerThanZero({
+                getDatesWithWorkDurationLongerThanZero({
                     '2021-01-01': { duration: { hours: undefined, minutes: undefined } },
                 })
             ).toBe(0);

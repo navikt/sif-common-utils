@@ -47,4 +47,4 @@ export interface WorkDuration {
 
 export type WorkDurationMap = { [isoDate: ISODate]: WorkDuration };
 
-export type DateDurationMap = { [isoDate: ISODate]: Duration | InputDuration };
+export type DateDurationMap = { [isoDate: ISODate]: Partial<Duration> | Partial<InputDuration> };
