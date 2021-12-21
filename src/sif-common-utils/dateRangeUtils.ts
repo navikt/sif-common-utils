@@ -356,7 +356,7 @@ export const getISODatesInISODateRange = (range: ISODateRange, onlyWeekDays = fa
         .map((date) => dateToISODate(date));
 };
 
-export const ISODateToIsoDateRange = (isoDate: ISODate): ISODateRange => {
+export const ISODateToISODateRange = (isoDate: ISODate): ISODateRange => {
     return `${isoDate}/${isoDate}`;
 };
 
@@ -374,7 +374,7 @@ const dateRangeUtils = {
         dateRangeToISODateRange,
         ISODateRangeToDateRange,
         ISODateRangeToISODates,
-        ISODateToIsoDateRange,
+        ISODateToISODateRange,
     },
     isDateRange,
     dateRangesCollide,

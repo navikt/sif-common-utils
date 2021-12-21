@@ -22,7 +22,7 @@ import {
     ISODateToDate,
     sortDateRange,
     sortDateRangeByToDate,
-    ISODateToIsoDateRange,
+    ISODateToISODateRange,
 } from '..';
 import { getDatesInMonthOutsideDateRange, getNumberOfDaysInDateRange, getWeeksInDateRange } from '../dateRangeUtils';
 
@@ -491,9 +491,9 @@ describe('dateRangeUtils', () => {
         });
     });
 
-    describe('ISODateToIsoDateRange', () => {
+    describe('ISODateToISODateRange', () => {
         it('returns correctIsoDateRange', () => {
-            const result = ISODateToIsoDateRange('2021-01-01');
+            const result = ISODateToISODateRange('2021-01-01');
             expect(result).toEqual('2021-01-01/2021-01-01');
         });
     });
