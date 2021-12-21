@@ -23,3 +23,18 @@ export interface InputDuration {
 }
 
 export type DecimalTime = number;
+
+export type DurationWeekDays = {
+    monday?: InputDuration;
+    tuesday?: InputDuration;
+    wednesday?: InputDuration;
+    thursday?: InputDuration;
+    friday?: InputDuration;
+};
+
+export interface DurationPerDay {
+    duration: Partial<InputDuration>;
+    percentage?: number;
+}
+
+export type DateDurationMap = { [isoDate: ISODate]: DurationPerDay };

@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import {
     dateIsInDateRange,
     dateIsInsideDateRange,
-    dateIsWithinMaybeDateRange,
+    dateIsInMaybeDateRange,
     DateRange,
     dateRangesCollide,
     dateRangeToISODateRange,
@@ -136,24 +136,24 @@ describe('dateRangeUtils', () => {
         const to = ISODateToDate('2020-01-05');
 
         it('returns true when date is within valid date range', () => {
-            expect(dateIsWithinMaybeDateRange(date, { from, to })).toBeTruthy();
+            expect(dateIsInMaybeDateRange(date, { from, to })).toBeTruthy();
         });
         it('return true when to-date is undefined and date is same or after from-date', () => {
-            expect(dateIsWithinMaybeDateRange(date, { from: date })).toBeTruthy();
-            expect(dateIsWithinMaybeDateRange(date, { from })).toBeTruthy();
+            expect(dateIsInMaybeDateRange(date, { from: date })).toBeTruthy();
+            expect(dateIsInMaybeDateRange(date, { from })).toBeTruthy();
         });
         it('returns false when to-date is undefined and date is before from-date', () => {
-            expect(dateIsWithinMaybeDateRange(dateBefore, { from })).toBeFalsy();
+            expect(dateIsInMaybeDateRange(dateBefore, { from })).toBeFalsy();
         });
         it('returns true when from-date is undefined and date is same or before to-date', () => {
-            expect(dateIsWithinMaybeDateRange(date, { to: date })).toBeTruthy();
-            expect(dateIsWithinMaybeDateRange(date, { to })).toBeTruthy();
+            expect(dateIsInMaybeDateRange(date, { to: date })).toBeTruthy();
+            expect(dateIsInMaybeDateRange(date, { to })).toBeTruthy();
         });
         it('returns false when from-date is undefined and date is after to-date', () => {
-            expect(dateIsWithinMaybeDateRange(date, { to: from })).toBeFalsy();
+            expect(dateIsInMaybeDateRange(date, { to: from })).toBeFalsy();
         });
         it('returns false when date range is not valid', () => {
-            expect(dateIsWithinMaybeDateRange(date, {})).toBeFalsy();
+            expect(dateIsInMaybeDateRange(date, {})).toBeFalsy();
         });
     });
     describe('dateIsInDateRange', () => {

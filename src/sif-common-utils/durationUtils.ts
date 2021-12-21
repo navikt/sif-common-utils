@@ -1,23 +1,51 @@
 import { parse } from 'iso8601-duration';
+import { trim } from 'lodash';
 import { Duration, InputDuration, ISODuration } from '.';
 
-export const durationAsInputDuration = (duration: Partial<Duration>): InputDuration => ensureInputDuration(duration);
-export const inputDurationAsDuration = (duration: Partial<InputDuration>): Duration => ensureDuration(duration);
+export const getNumberValue = (value: any): number | 'invalidNumberValue' | undefined => {
+    if (typeof value === 'number') {
+        return value;
+    }
+    if (typeof value === 'string') {
+        if (trim(value).length === 0) {
+            return undefined;
+        }
+        const numberValue = parseInt(value, 10);
+        if (!isNaN(numberValue)) {
+            return numberValue;
+        }
+    }
+    if (typeof value === 'undefined') {
+        return undefined;
+    }
+    return 'invalidNumberValue';
+};
 
-export const ensureDuration = (duration: Partial<InputDuration | Duration>): Duration => {
-    const hours = duration.hours || 0;
-    const minutes = duration.minutes || 0;
+export const durationAsInputDuration = (duration: Partial<Duration | InputDuration>): InputDuration => {
+    const d = ensureDurationIgnoreInvalid(duration);
     return {
-        hours: typeof hours === 'string' ? parseInt(hours, 10) : hours,
-        minutes: typeof minutes === 'string' ? parseInt(minutes, 10) : minutes,
+        hours: `${d.hours}`,
+        minutes: `${d.minutes}`,
+    };
+};
+export const inputDurationAsDuration = (duration: Partial<InputDuration>): Duration =>
+    ensureDurationIgnoreInvalid(duration);
+
+export const ensureDurationIgnoreInvalid = (duration: Partial<InputDuration | Duration>): Duration => {
+    const hours = getNumberValue(duration.hours);
+    const minutes = getNumberValue(duration.minutes);
+
+    if (hours === 'invalidNumberValue' || minutes === 'invalidNumberValue') {
+        return { hours: 0, minutes: 0 };
+    }
+    return {
+        hours: hours || 0,
+        minutes: minutes || 0,
     };
 };
 
 export const ensureInputDuration = (duration: Partial<InputDuration | Duration>): InputDuration => {
-    return {
-        hours: `${duration.hours || '0'}`,
-        minutes: `${duration.minutes || '0'}`,
-    };
+    return durationAsInputDuration(duration);
 };
 
 export const durationIsZero = (duration: Partial<Duration | InputDuration>): boolean => {
@@ -39,6 +67,22 @@ export const durationsAreEqual = (
         return false;
     }
     return durationToISODuration(duration1) === durationToISODuration(duration2);
+};
+
+export const summarizeDurations = (durations: Array<InputDuration | Duration | undefined>): Duration => {
+    let hours = 0;
+    let minutes = 0;
+    durations.forEach((duration) => {
+        if (duration) {
+            const dur = ensureDurationIgnoreInvalid(duration);
+            hours += dur.hours;
+            minutes += dur.minutes;
+        }
+    });
+    return {
+        hours,
+        minutes,
+    };
 };
 
 export const ISODurationToDuration = (duration: string): Duration => {
@@ -73,14 +117,16 @@ export const decimalDurationToDuration = (duration: number): Duration => {
 export const decimalDurationToInputDuration = (duration: number): InputDuration => {
     const hours = Math.floor(duration);
     const minutes = Math.round(60 * (duration % 1));
-    return ensureInputDuration({
-        hours,
-        minutes,
-    });
+    return durationAsInputDuration(
+        ensureDurationIgnoreInvalid({
+            hours,
+            minutes,
+        })
+    );
 };
 
-export const durationToDecimalDuration = (duration: Partial<Duration | InputDuration>): number => {
-    const { hours, minutes } = ensureDuration(duration);
+export const durationToDecimalDuration = (duration: Partial<Duration> | Partial<InputDuration>): number => {
+    const { hours, minutes } = ensureDurationIgnoreInvalid(duration);
     const decimalTime = hours + ((100 / 60) * minutes) / 100;
     return Math.round(decimalTime * 100) / 100;
 };
@@ -90,15 +136,20 @@ export const durationToDecimalDuration = (duration: Partial<Duration | InputDura
  * @param duration
  * @returns
  */
-export const isValidDuration = (duration: Partial<Duration> | undefined): duration is Duration => {
-    return (
-        duration !== undefined &&
-        duration.hours !== undefined &&
-        !isNaN(duration.hours) &&
-        duration.minutes !== undefined &&
-        !isNaN(duration.minutes) &&
-        duration.minutes < 60
-    );
+export const isValidDuration = (duration: Partial<Duration | InputDuration> | undefined): duration is Duration => {
+    if (!duration) {
+        return false;
+    }
+    const hours = getNumberValue(duration.hours);
+    const minutes = getNumberValue(duration.minutes);
+    if (hours === 'invalidNumberValue' || minutes === 'invalidNumberValue') {
+        return false;
+    }
+    if (hours === undefined && minutes === undefined) {
+        return false;
+    }
+    const dur = ensureDurationIgnoreInvalid({ hours, minutes });
+    return dur.hours >= 0 && dur.minutes >= 0 && dur.minutes < 60;
 };
 
 const durationUtils = {
@@ -118,8 +169,8 @@ export default durationUtils;
 //  * @param hideZeroMinutes do not print minutes if 0 minutes
 //  */
 // export const timeToString = (time: Time, intl: IntlShape, hideZeroMinutes?: boolean): string => {
-//     if (hideZeroMinutes && time.minutes === '0') {
-//         return intlHelper(intl, 'timer', { timer: time.hours });
+//     if (hideZeroMinutes && duration.minutes === '0') {
+//         return intlHelper(intl, 'timer', { timer: duration.hours });
 //     }
-//     return intlHelper(intl, 'timerOgMinutter', { timer: time.hours, minutter: time.minutes });
+//     return intlHelper(intl, 'timerOgMinutter', { timer: duration.hours, minutter: duration.minutes });
 // };
