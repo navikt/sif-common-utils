@@ -1,6 +1,6 @@
 import { DateDurationMap, ISODateToDate } from '..';
 import {
-    cleanupDateDurationMap,
+    removeInvalidDurations,
     durationPerDayIsSame,
     getChangedDateDurations,
     getDatesWithDurationInDateRange,
@@ -10,15 +10,15 @@ import {
 } from '../dateDurationUtils';
 
 describe('dateDurationUtils', () => {
-    describe('cleanupDateDurationMap', () => {
+    describe('removeInvalidDurations', () => {
         it('removes duration which has duration with undefined hours and minutes', () => {
-            const result = cleanupDateDurationMap({
+            const result = removeInvalidDurations({
                 '2021-02-05': { duration: {} },
             });
             expect(Object.keys(result).length).toBe(0);
         });
         it('removes duration which has duration with invalid values in hours or minutes', () => {
-            const result = cleanupDateDurationMap({
+            const result = removeInvalidDurations({
                 '2021-02-05': { duration: { hours: 'a', minutes: '0' } },
             });
             expect(Object.keys(result).length).toBe(0);
@@ -26,21 +26,21 @@ describe('dateDurationUtils', () => {
         it('does not remove duration which is valid', () => {
             expect(
                 Object.keys(
-                    cleanupDateDurationMap({
+                    removeInvalidDurations({
                         '2021-02-05': { duration: { hours: '0', minutes: '0' } },
                     })
                 ).length
             ).toBe(1);
             expect(
                 Object.keys(
-                    cleanupDateDurationMap({
+                    removeInvalidDurations({
                         '2021-02-05': { duration: { hours: '', minutes: '0' } },
                     })
                 ).length
             ).toBe(1);
             expect(
                 Object.keys(
-                    cleanupDateDurationMap({
+                    removeInvalidDurations({
                         '2021-02-05': { duration: { hours: '1' } },
                     })
                 ).length

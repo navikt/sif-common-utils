@@ -22,6 +22,7 @@ import {
     ISODateToDate,
     sortDateRange,
     sortDateRangeByToDate,
+    ISODateToIsoDateRange,
 } from '..';
 import { getDatesInMonthOutsideDateRange, getNumberOfDaysInDateRange, getWeeksInDateRange } from '../dateRangeUtils';
 
@@ -487,6 +488,13 @@ describe('dateRangeUtils', () => {
         it('returns correct date range for one month when only weekdays allowed - 2', () => {
             const result = getMonthDateRange(ISODateToDate('2021-08-01'), true);
             expect(dateRangeToISODateRange(result)).toEqual('2021-08-02/2021-08-31');
+        });
+    });
+
+    describe('ISODateToIsoDateRange', () => {
+        it('returns correctIsoDateRange', () => {
+            const result = ISODateToIsoDateRange('2021-01-01');
+            expect(result).toEqual('2021-01-01/2021-01-01');
         });
     });
 });

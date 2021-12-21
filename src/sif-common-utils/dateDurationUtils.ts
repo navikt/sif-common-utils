@@ -29,7 +29,7 @@ dayjs.extend(minMax);
  * @param durationMap
  * @returns DateDurationMap
  */
-export const cleanupDateDurationMap = (durationMap: DateDurationMap): DateDurationMap => {
+export const removeInvalidDurations = (durationMap: DateDurationMap): DateDurationMap => {
     const cleanMap: DateDurationMap = {};
     Object.keys(durationMap).forEach((key) => {
         const dateDuration = durationMap[key];

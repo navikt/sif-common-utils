@@ -356,6 +356,10 @@ export const getISODatesInISODateRange = (range: ISODateRange, onlyWeekDays = fa
         .map((date) => dateToISODate(date));
 };
 
+export const ISODateToIsoDateRange = (isoDate: ISODate): ISODateRange => {
+    return `${isoDate}/${isoDate}`;
+};
+
 const dateRangeUtils = {
     sort: {
         sortDateRange,
@@ -370,6 +374,7 @@ const dateRangeUtils = {
         dateRangeToISODateRange,
         ISODateRangeToDateRange,
         ISODateRangeToISODates,
+        ISODateToIsoDateRange,
     },
     isDateRange,
     dateRangesCollide,
