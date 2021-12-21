@@ -4,7 +4,7 @@ import {
     Duration,
     durationAsInputDuration,
     durationIsZero,
-    durationsAreSame,
+    durationsAreEqual,
     durationToDecimalDuration,
     durationToISODuration,
     ensureDurationIgnoreInvalid,
@@ -255,25 +255,25 @@ describe('durationUtils', () => {
             expect(duration.minutes).toEqual('2');
         });
     });
-    describe('durationsAreSame', () => {
+    describe('durationsAreEqual', () => {
         const dur1: Duration = ISODurationToDuration('PT2H0M');
         const dur2: Duration = ISODurationToDuration('PT2H0M');
         const dur3: Duration = ISODurationToDuration('PT3H0M');
 
         it('returns true if both are undefined', () => {
-            expect(durationsAreSame(undefined, undefined)).toBeTruthy();
+            expect(durationsAreEqual(undefined, undefined)).toBeTruthy();
         });
 
         it('returns true when equal durations', () => {
-            expect(durationsAreSame(dur1, dur2)).toBeTruthy();
+            expect(durationsAreEqual(dur1, dur2)).toBeTruthy();
         });
 
         it('returns false if only one of them are undefined', () => {
-            expect(durationsAreSame(dur1, undefined)).toBeFalsy();
-            expect(durationsAreSame(undefined, dur1)).toBeFalsy();
+            expect(durationsAreEqual(dur1, undefined)).toBeFalsy();
+            expect(durationsAreEqual(undefined, dur1)).toBeFalsy();
         });
         it('returns false when not equal durations', () => {
-            expect(durationsAreSame(dur1, dur3)).toBeFalsy();
+            expect(durationsAreEqual(dur1, dur3)).toBeFalsy();
         });
     });
     describe('getDurationsDiff', () => {

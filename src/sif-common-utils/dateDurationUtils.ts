@@ -3,7 +3,7 @@ import {
     DateRange,
     Duration,
     durationIsZero,
-    durationsAreSame,
+    durationsAreEqual,
     ensureDurationIgnoreInvalid,
     ensureInputDuration,
     isDateInDateRange,
@@ -70,7 +70,7 @@ export const getDateDurationDiff = (durations1: DateDurationMap, durations2: Dat
     const resultMap: DateDurationMap = {};
     Object.keys(durations1).forEach((isoDate) => {
         const oldValue = durations2[isoDate];
-        if (oldValue && durationsAreSame(durations1[isoDate], oldValue)) {
+        if (oldValue && durationsAreEqual(durations1[isoDate], oldValue)) {
             return;
         }
         resultMap[isoDate] = durations1[isoDate];

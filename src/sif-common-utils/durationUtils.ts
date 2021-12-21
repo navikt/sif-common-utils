@@ -56,7 +56,7 @@ export const durationToISODuration = ({ hours, minutes }: Partial<Duration | Inp
     return `PT${hours || 0}H${minutes || 0}M`;
 };
 
-export const durationsAreSame = (
+export const durationsAreEqual = (
     duration1?: Partial<InputDuration | Duration>,
     duration2?: Partial<InputDuration | Duration>
 ): boolean => {
@@ -162,7 +162,7 @@ export const getDurationsDiff = (durations1: DateDurationMap, durations2: DateDu
     const resultMap: DateDurationMap = {};
     Object.keys(durations1).forEach((isoDate) => {
         const oldValue = durations2[isoDate];
-        if (oldValue && durationsAreSame(durations1[isoDate], oldValue)) {
+        if (oldValue && durationsAreEqual(durations1[isoDate], oldValue)) {
             return;
         }
         resultMap[isoDate] = durations1[isoDate];
