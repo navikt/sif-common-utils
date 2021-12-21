@@ -99,7 +99,7 @@ export const datesCollideWithDateRanges = (dates: Date[], dateRanges: DateRange[
  * @param dateRange
  * @returns boolean
  */
-export const dateIsInMaybeDateRange = (date: Date, dateRange: MaybeDateRange): boolean => {
+export const isDateInMaybeDateRange = (date: Date, dateRange: MaybeDateRange): boolean => {
     if (isDateRange(dateRange)) {
         return isDateInDateRange(date, dateRange);
     }
@@ -129,7 +129,7 @@ export const isDateInDateRange = (date: Date, dateRange: DateRange): boolean => 
  * @param dateRange
  * @returns boolean
  */
-export const dateIsInsideDateRange = (date: Date, dateRange: DateRange): boolean => {
+export const isDateInsideDateRange = (date: Date, dateRange: DateRange): boolean => {
     return dayjs(date).isBetween(dateRange.from, dateRange.to, 'day', '()');
 };
 
@@ -366,9 +366,9 @@ const dateRangeUtils = {
         sortDateRangeByToDate,
     },
     date: {
-        dateIsInMaybeDateRange,
+        isDateInMaybeDateRange,
         isDateInDateRange,
-        dateIsInsideDateRange,
+        isDateInsideDateRange,
     },
     iso: {
         dateRangeToISODateRange,
