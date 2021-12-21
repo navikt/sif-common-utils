@@ -11,7 +11,7 @@ import {
     ISODateToDate,
     isValidDuration,
     DurationPerDay,
-    DurationWeekDays,
+    DurationWeekdays,
     Duration,
     summarizeDurations,
     ensureDurationIgnoreInvalid,
@@ -40,13 +40,13 @@ export const removeInvalidDurations = (durationMap: DateDurationMap): DateDurati
     return cleanMap;
 };
 
-export const summarizeDurationWeekDays = (weekDays: DurationWeekDays): Duration => {
+export const summarizeDurationWeekDays = (weekdays: DurationWeekdays): Duration => {
     return summarizeDurations([
-        weekDays.monday,
-        weekDays.tuesday,
-        weekDays.wednesday,
-        weekDays.thursday,
-        weekDays.friday,
+        weekdays.monday,
+        weekdays.tuesday,
+        weekdays.wednesday,
+        weekdays.thursday,
+        weekdays.friday,
     ]);
 };
 

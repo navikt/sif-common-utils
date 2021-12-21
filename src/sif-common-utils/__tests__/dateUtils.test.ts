@@ -62,7 +62,7 @@ describe('dateUtils', () => {
             expect(dateToISODate(dates[0])).toEqual('2021-02-01');
             expect(dateToISODate(dates[27])).toEqual('2021-02-28');
         });
-        it('returns all days of february 2021 correctly, weekDaysOnly === true', () => {
+        it('returns all days of february 2021 correctly, weekdaysOnly === true', () => {
             const dates = getDatesInMonth(ISODateToDate('2021-02-01'), true);
             expect(dates.length).toBe(20);
             expect(dateToISODate(dates[0])).toEqual('2021-02-01');

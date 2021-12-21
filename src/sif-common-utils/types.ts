@@ -24,12 +24,20 @@ export interface InputDuration {
 
 export type DecimalTime = number;
 
-export type DurationWeekDays = {
-    monday?: InputDuration;
-    tuesday?: InputDuration;
-    wednesday?: InputDuration;
-    thursday?: InputDuration;
-    friday?: InputDuration;
+export enum Weekday {
+    'monday' = 'monday',
+    'tuesday' = 'tuesday',
+    'wednesday' = 'wednesday',
+    'thursday' = 'thursday',
+    'friday' = 'friday',
+}
+
+export type DurationWeekdays = {
+    [Weekday.monday]?: InputDuration;
+    [Weekday.tuesday]?: InputDuration;
+    [Weekday.wednesday]?: InputDuration;
+    [Weekday.thursday]?: InputDuration;
+    [Weekday.friday]?: InputDuration;
 };
 
 export interface DurationPerDay {
