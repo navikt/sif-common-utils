@@ -71,7 +71,7 @@ export const getWorkDurationDiff = (durations1: WorkDurationMap, durations2: Wor
     const resultMap: WorkDurationMap = {};
     Object.keys(durations1).forEach((isoDate) => {
         const oldValue = durations2[isoDate];
-        if (oldValue && workDurationIsSame(durations1[isoDate], oldValue)) {
+        if (oldValue && workDurationsAreEqual(durations1[isoDate], oldValue)) {
             return;
         }
         resultMap[isoDate] = durations1[isoDate];
@@ -107,7 +107,7 @@ export const getValidWorkDurationInDateRange = (
  * @param duration2
  * @returns boolean
  */
-export const workDurationIsSame = (duration1: WorkDuration, duration2: WorkDuration): boolean => {
+export const workDurationsAreEqual = (duration1: WorkDuration, duration2: WorkDuration): boolean => {
     if (duration1.percentage !== undefined && duration2.percentage !== undefined) {
         return duration1.percentage === duration2.percentage;
     }

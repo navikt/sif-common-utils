@@ -1,7 +1,7 @@
 import { WorkDurationMap, ISODateToDate } from '..';
 import {
     getValidWorkDurations,
-    workDurationIsSame,
+    workDurationsAreEqual,
     getWorkDurationDiff,
     getValidWorkDurationInDateRange,
     getDatesWithWorkDurationLongerThanZero,
@@ -107,10 +107,10 @@ describe('workDurationUtils', () => {
             expect(Object.keys(result).length).toBe(1);
         });
     });
-    describe('durationPerDayIsSame', () => {
+    describe('workDurationsAreEqual', () => {
         it('returns true when durations is the same', () => {
             expect(
-                workDurationIsSame(
+                workDurationsAreEqual(
                     { duration: { hours: '0', minutes: '1' } },
                     { duration: { hours: '0', minutes: '1' } }
                 )
@@ -118,7 +118,7 @@ describe('workDurationUtils', () => {
         });
         it('returns true when percentage is the same', () => {
             expect(
-                workDurationIsSame(
+                workDurationsAreEqual(
                     { percentage: 100, duration: { hours: '0', minutes: '1' } },
                     { percentage: 100, duration: { hours: '0', minutes: '1' } }
                 )
@@ -126,7 +126,7 @@ describe('workDurationUtils', () => {
         });
         it('returns false when percentage is not the same', () => {
             expect(
-                workDurationIsSame(
+                workDurationsAreEqual(
                     { percentage: 100, duration: { hours: '0', minutes: '1' } },
                     { percentage: 99, duration: { hours: '0', minutes: '1' } }
                 )
