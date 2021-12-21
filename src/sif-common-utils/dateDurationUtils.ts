@@ -13,10 +13,10 @@ import {
     summarizeDurations,
 } from '.';
 
-export const getValidDateDurations = (workDurationMap: DateDurationMap): DateDurationMap => {
+export const getValidDateDurations = (durationMap: DateDurationMap): DateDurationMap => {
     const cleanMap: DateDurationMap = {};
-    Object.keys(workDurationMap).forEach((key) => {
-        const duration = workDurationMap[key];
+    Object.keys(durationMap).forEach((key) => {
+        const duration = durationMap[key];
         if (isValidDuration(duration)) {
             cleanMap[key] = { ...duration };
         }
@@ -24,8 +24,8 @@ export const getValidDateDurations = (workDurationMap: DateDurationMap): DateDur
     return cleanMap;
 };
 
-export const summarizeDateDurationMap = (workDuration: DateDurationMap): Duration => {
-    const durations = Object.keys(workDuration).map((key) => ensureDurationIgnoreInvalid(workDuration[key]));
+export const summarizeDateDurationMap = (durationMap: DateDurationMap): Duration => {
+    const durations = Object.keys(durationMap).map((key) => ensureDurationIgnoreInvalid(durationMap[key]));
     return summarizeDurations(durations);
 };
 
@@ -41,20 +41,23 @@ export const getDatesWithDurationLongerThanZero = (duration: DateDurationMap): I
  * @param dateRange
  * @returns
  */
-export const getValidDateDurationInDateRange = (
+export const getDateDurationsInDateRange = (
     dateDurationMap: DateDurationMap,
-    dateRange: DateRange
+    dateRange: DateRange,
+    removeInvalidDurations = true
 ): DateDurationMap => {
-    const validWorkInDateRange: DateDurationMap = {};
-    const validWork = getValidDateDurations(dateDurationMap);
-    Object.keys(validWork).forEach((isoDate) => {
+    const dateDuration: DateDurationMap = {};
+    Object.keys(dateDurationMap).forEach((isoDate) => {
         const date = ISODateToDate(isoDate);
         if (date && isDateInDateRange(date, dateRange)) {
-            validWorkInDateRange[isoDate] = dateDurationMap[isoDate];
+            if (removeInvalidDurations && isValidDuration(dateDurationMap[isoDate]) === false) {
+                return;
+            }
+            dateDuration[isoDate] = dateDurationMap[isoDate];
         }
         return false;
     });
-    return validWorkInDateRange;
+    return dateDuration;
 };
 
 /**

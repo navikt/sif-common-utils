@@ -4,7 +4,7 @@ import {
     summarizeDateDurationMap,
     getDatesWithDurationLongerThanZero,
     getDateDurationDiff,
-    getValidDateDurationInDateRange,
+    getDateDurationsInDateRange,
     DateDurationMap,
 } from '..';
 
@@ -102,7 +102,7 @@ describe('dateDurationUtils', () => {
         });
     });
 
-    describe('getValidDateDurationInDateRange', () => {
+    describe('getDateDurationsInDateRange', () => {
         const data: DateDurationMap = {
             '2021-01-01': { hours: '1', minutes: '2' },
             '2021-01-02': { hours: '1', minutes: '2' },
@@ -112,7 +112,33 @@ describe('dateDurationUtils', () => {
         };
 
         it('returns only dates within the date range', () => {
-            const result = getValidDateDurationInDateRange(data, {
+            const result = getDateDurationsInDateRange(data, {
+                from: ISODateToDate('2021-01-02'),
+                to: ISODateToDate('2021-01-03'),
+            });
+            expect(Object.keys(result).length).toBe(2);
+            expect(result['2021-01-02']).toBeDefined();
+            expect(result['2021-01-03']).toBeDefined();
+        });
+        it('returns only valid durations within the date range', () => {
+            const result = getDateDurationsInDateRange(
+                {
+                    '2021-01-01': { hours: 'a', minutes: '' },
+                    '2021-01-02': { hours: '1', minutes: undefined },
+                    '2021-01-03': { hours: '1', minutes: '2' },
+                    '2021-01-05': { hours: undefined, minutes: -1 },
+                },
+                {
+                    from: ISODateToDate('2021-01-01'),
+                    to: ISODateToDate('2021-01-04'),
+                }
+            );
+            expect(Object.keys(result).length).toBe(2);
+            expect(result['2021-01-02']).toBeDefined();
+            expect(result['2021-01-03']).toBeDefined();
+        });
+        it('returns only dates within the date range, and keeps invalid dates if removeInvalidDates === false', () => {
+            const result = getDateDurationsInDateRange(data, {
                 from: ISODateToDate('2021-01-02'),
                 to: ISODateToDate('2021-01-03'),
             });
