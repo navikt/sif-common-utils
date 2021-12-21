@@ -4,7 +4,7 @@ import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import minMax from 'dayjs/plugin/minMax';
 import {
-    dateIsInDateRange,
+    isDateInDateRange,
     DateRange,
     WorkDurationMap,
     durationIsZero,
@@ -93,7 +93,7 @@ export const getValidWorkDurationInDateRange = (
     const validWork = getValidWorkDurations(workDurationMap);
     Object.keys(validWork).forEach((isoDate) => {
         const date = ISODateToDate(isoDate);
-        if (date && dateIsInDateRange(date, dateRange)) {
+        if (date && isDateInDateRange(date, dateRange)) {
             validWorkInDateRange[isoDate] = workDurationMap[isoDate];
         }
         return false;

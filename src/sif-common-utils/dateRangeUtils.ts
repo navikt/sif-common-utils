@@ -87,7 +87,7 @@ export const dateRangesCollide = (dateRanges: DateRange[], fromDateCanBeSameAsPr
 export const datesCollideWithDateRanges = (dates: Date[], dateRanges: DateRange[]): boolean => {
     if (dateRanges.length > 0 && dates.length > 0) {
         return dates.some((d) => {
-            return dateRanges.some((range) => dateIsInDateRange(d, range));
+            return dateRanges.some((range) => isDateInDateRange(d, range));
         });
     }
     return false;
@@ -101,7 +101,7 @@ export const datesCollideWithDateRanges = (dates: Date[], dateRanges: DateRange[
  */
 export const dateIsInMaybeDateRange = (date: Date, dateRange: MaybeDateRange): boolean => {
     if (isDateRange(dateRange)) {
-        return dateIsInDateRange(date, dateRange);
+        return isDateInDateRange(date, dateRange);
     }
     if (dateRange.from) {
         return dayjs(date).isSameOrAfter(dateRange.from);
@@ -119,7 +119,7 @@ export const dateIsInMaybeDateRange = (date: Date, dateRange: MaybeDateRange): b
  * @returns boolean
  */
 
-export const dateIsInDateRange = (date: Date, dateRange: DateRange): boolean => {
+export const isDateInDateRange = (date: Date, dateRange: DateRange): boolean => {
     return dayjs(date).isBetween(dateRange.from, dateRange.to, 'day', '[]');
 };
 
@@ -366,8 +366,8 @@ const dateRangeUtils = {
         sortDateRangeByToDate,
     },
     date: {
-        dateIsWithinMaybeDateRange: dateIsInMaybeDateRange,
-        dateIsInDateRange,
+        dateIsInMaybeDateRange,
+        isDateInDateRange,
         dateIsInsideDateRange,
     },
     iso: {

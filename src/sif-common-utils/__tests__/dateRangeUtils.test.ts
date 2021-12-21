@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import {
-    dateIsInDateRange,
+    isDateInDateRange,
     dateIsInsideDateRange,
     dateIsInMaybeDateRange,
     DateRange,
@@ -157,21 +157,21 @@ describe('dateRangeUtils', () => {
             expect(dateIsInMaybeDateRange(date, {})).toBeFalsy();
         });
     });
-    describe('dateIsInDateRange', () => {
+    describe('isDateInDateRange', () => {
         it('returns true when date is same as from date', () => {
-            expect(dateIsInDateRange(from, { from, to })).toBeTruthy();
+            expect(isDateInDateRange(from, { from, to })).toBeTruthy();
         });
         it('returns true when date is same as to date', () => {
-            expect(dateIsInDateRange(to, { from, to })).toBeTruthy();
+            expect(isDateInDateRange(to, { from, to })).toBeTruthy();
         });
         it('returns true when date is bewteen start and to dates', () => {
-            expect(dateIsInDateRange(dayjs(from).add(1, 'day').toDate(), { from, to })).toBeTruthy();
+            expect(isDateInDateRange(dayjs(from).add(1, 'day').toDate(), { from, to })).toBeTruthy();
         });
         it('returns false when date is before from date', () => {
-            expect(dateIsInDateRange(dayjs(from).subtract(1, 'day').toDate(), { from, to })).toBeFalsy();
+            expect(isDateInDateRange(dayjs(from).subtract(1, 'day').toDate(), { from, to })).toBeFalsy();
         });
         it('returns false when date is after to date', () => {
-            expect(dateIsInDateRange(dayjs(to).add(1, 'day').toDate(), { from, to })).toBeFalsy();
+            expect(isDateInDateRange(dayjs(to).add(1, 'day').toDate(), { from, to })).toBeFalsy();
         });
     });
     describe('dateIsInsideDateRange', () => {
