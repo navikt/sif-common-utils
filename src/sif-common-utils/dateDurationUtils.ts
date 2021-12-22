@@ -5,7 +5,7 @@ import {
     durationIsZero,
     durationsAreEqual,
     ensureDurationIgnoreInvalid,
-    ensureInputDuration,
+    ensureDateDuration,
     isDateInDateRange,
     ISODate,
     ISODateToDate,
@@ -32,7 +32,7 @@ export const summarizeDateDurationMap = (durationMap: DateDurationMap): NumberDu
 export const getDatesWithDurationLongerThanZero = (duration: DateDurationMap): ISODate[] =>
     Object.keys(duration).filter((key) => {
         const d = duration[key];
-        return isValidDuration(d) && durationIsZero(ensureInputDuration(d)) === false;
+        return isValidDuration(d) && durationIsZero(ensureDateDuration(d)) === false;
     });
 
 /**

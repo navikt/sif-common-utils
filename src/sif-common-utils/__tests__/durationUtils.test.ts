@@ -1,19 +1,19 @@
 import {
+    DateDurationAsDuration,
+    decimalDurationToDateDuration,
     decimalDurationToDuration,
-    decimalDurationToInputDuration,
-    NumberDuration,
-    durationAsInputDuration,
+    durationAsDateDuration,
     durationIsZero,
     durationsAreEqual,
     durationToDecimalDuration,
     durationToISODuration,
+    ensureDateDuration,
     ensureDurationIgnoreInvalid,
-    ensureInputDuration,
     getPositiveNumberValue,
-    inputDurationAsDuration,
+    ISODurationToDateDuration,
     ISODurationToDuration,
-    ISODurationToInputDuration,
     isValidDuration,
+    NumberDuration,
 } from '../';
 import { getDurationsDiff, summarizeDurations } from '../durationUtils';
 
@@ -44,17 +44,17 @@ describe('durationUtils', () => {
             expect(getPositiveNumberValue({})).toEqual('invalidNumberValue');
         });
     });
-    describe('durationAsInputDuration', () => {
+    describe('durationAsDateDuration', () => {
         it('converts correctly', () => {
-            const result = durationAsInputDuration({ hours: 1, minutes: 2 });
+            const result = durationAsDateDuration({ hours: 1, minutes: 2 });
             expect(result.hours).toEqual('1');
             expect(result.minutes).toEqual('2');
         });
     });
 
-    describe('inputDurationAsDuration', () => {
-        it('returns duration correctly when inputDuration is valid', () => {
-            const result = inputDurationAsDuration({ hours: '6', minutes: '30' });
+    describe('DateDurationAsDuration', () => {
+        it('returns duration correctly when DateDuration is valid', () => {
+            const result = DateDurationAsDuration({ hours: '6', minutes: '30' });
             expect(result?.hours).toEqual(6);
             expect(result?.minutes).toEqual(30);
         });
@@ -103,7 +103,7 @@ describe('durationUtils', () => {
                 expect(durationToDecimalDuration({ hours: 1, minutes: 120 })).toEqual(3);
             });
         });
-        describe('inputDuration with strings', () => {
+        describe('DateDuration with strings', () => {
             it('converts 1 hour correctly', () => {
                 expect(durationToDecimalDuration({ hours: '1', minutes: '0' })).toEqual(1);
             });
@@ -132,50 +132,50 @@ describe('durationUtils', () => {
             expect(result.minutes).toEqual(59);
         });
     });
-    describe('decimalDurationToInputDuration', () => {
+    describe('decimalDurationToDateDuration', () => {
         it('converts 1 hour correctly', () => {
-            const result = decimalDurationToInputDuration(1);
+            const result = decimalDurationToDateDuration(1);
             expect(result.hours).toEqual('1');
             expect(result.minutes).toEqual('0');
         });
         it('converts 1,5 hours correctly', () => {
-            const result = decimalDurationToInputDuration(1.5);
+            const result = decimalDurationToDateDuration(1.5);
             expect(result.hours).toEqual('1');
             expect(result.minutes).toEqual('30');
         });
         it('converts 1,98 hours correctly', () => {
-            const result = decimalDurationToInputDuration(1.98);
+            const result = decimalDurationToDateDuration(1.98);
             expect(result.hours).toEqual('1');
             expect(result.minutes).toEqual('59');
         });
     });
-    describe('ISODurationToInputDuration', () => {
+    describe('ISODurationToDateDuration', () => {
         it('returns undefined if duration is invalid', () => {
-            expect(ISODurationToInputDuration('TABC')).toBeFalsy();
+            expect(ISODurationToDateDuration('TABC')).toBeFalsy();
         });
         it('returns correct input duration when duration is valid', () => {
-            expect(ISODurationToInputDuration('PT1H')?.hours).toEqual('1');
-            expect(ISODurationToInputDuration('PT1M')?.minutes).toEqual('1');
+            expect(ISODurationToDateDuration('PT1H')?.hours).toEqual('1');
+            expect(ISODurationToDateDuration('PT1M')?.minutes).toEqual('1');
         });
         it('returns 0 hours and 0 minutes when duration is valid, but hours and minutes not set', () => {
-            expect(ISODurationToInputDuration('PT')?.hours).toEqual('0');
-            expect(ISODurationToInputDuration('PT')?.minutes).toEqual('0');
+            expect(ISODurationToDateDuration('PT')?.hours).toEqual('0');
+            expect(ISODurationToDateDuration('PT')?.minutes).toEqual('0');
         });
     });
     describe('isValidDuration', () => {
         it('returns false if duration is undefined', () => {
             expect(isValidDuration(undefined)).toBeFalsy();
         });
-        it('returns false if duration is inputDuration with empty strings', () => {
+        it('returns false if duration is DateDuration with empty strings', () => {
             expect(isValidDuration({ hours: '', minutes: '' })).toBeFalsy();
         });
-        it('returns false if duration is inputDuration with invalid values in hours and or minutes', () => {
+        it('returns false if duration is DateDuration with invalid values in hours and or minutes', () => {
             expect(isValidDuration({ hours: 'a', minutes: '' })).toBeFalsy();
             expect(isValidDuration({ hours: 'a', minutes: '0' })).toBeFalsy();
             expect(isValidDuration({ hours: '0', minutes: '-' })).toBeFalsy();
             expect(isValidDuration({ hours: '', minutes: '' })).toBeFalsy();
         });
-        it('returns true if duration is inputDuration with value for minutes and/or hours', () => {
+        it('returns true if duration is DateDuration with value for minutes and/or hours', () => {
             expect(isValidDuration({ hours: '1', minutes: '' })).toBeTruthy();
             expect(isValidDuration({ hours: '', minutes: '1' })).toBeTruthy();
             expect(isValidDuration({ hours: '1', minutes: '1' })).toBeTruthy();
@@ -236,24 +236,24 @@ describe('durationUtils', () => {
             expect(duration.minutes).toEqual(2);
         });
     });
-    describe('ensureInputDuration', () => {
+    describe('ensureDateDuration', () => {
         it('returns valid duration if hours or minutes are missing', () => {
-            const duration = ensureInputDuration({});
+            const duration = ensureDateDuration({});
             expect(duration.hours).toEqual('0');
             expect(duration.minutes).toEqual('0');
         });
         it('keeps hours if hours are defined and minutes are undefined', () => {
-            const duration = ensureInputDuration({ hours: '1' });
+            const duration = ensureDateDuration({ hours: '1' });
             expect(duration.hours).toEqual('1');
             expect(duration.minutes).toEqual('0');
         });
         it('keeps minutes if hours are defined and minutes are undefined', () => {
-            const duration = ensureInputDuration({ minutes: '1' });
+            const duration = ensureDateDuration({ minutes: '1' });
             expect(duration.hours).toEqual('0');
             expect(duration.minutes).toEqual('1');
         });
         it('keeps hours and minutes if both are defined', () => {
-            const duration = ensureInputDuration({ hours: 1, minutes: 2 });
+            const duration = ensureDateDuration({ hours: 1, minutes: 2 });
             expect(duration.hours).toEqual('1');
             expect(duration.minutes).toEqual('2');
         });

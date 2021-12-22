@@ -17,10 +17,6 @@ export interface NumberDuration {
     hours: number;
     minutes: number;
 }
-export interface InputDuration {
-    hours: string;
-    minutes: string;
-}
 
 export enum Weekday {
     'monday' = 'monday',
@@ -31,18 +27,17 @@ export enum Weekday {
 }
 
 export type DurationWeekdays = {
-    [Weekday.monday]?: InputDuration;
-    [Weekday.tuesday]?: InputDuration;
-    [Weekday.wednesday]?: InputDuration;
-    [Weekday.thursday]?: InputDuration;
-    [Weekday.friday]?: InputDuration;
+    [Weekday.monday]?: DateDuration;
+    [Weekday.tuesday]?: DateDuration;
+    [Weekday.wednesday]?: DateDuration;
+    [Weekday.thursday]?: DateDuration;
+    [Weekday.friday]?: DateDuration;
 };
 
-export interface WorkDuration {
-    duration: Partial<InputDuration>;
+export interface DateDuration {
+    hours?: string;
+    minutes?: string;
     percentage?: number;
 }
 
-export type WorkDurationMap = { [isoDate: ISODate]: WorkDuration };
-
-export type DateDurationMap = { [isoDate: ISODate]: Partial<InputDuration> };
+export type DateDurationMap = { [isoDate: ISODate]: DateDuration };
