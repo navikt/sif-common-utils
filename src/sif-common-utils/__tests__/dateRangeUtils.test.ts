@@ -1,8 +1,5 @@
 import dayjs from 'dayjs';
 import {
-    isDateInDateRange,
-    isDateInsideDateRange,
-    isDateInMaybeDateRange,
     DateRange,
     dateRangesCollide,
     dateRangeToISODateRange,
@@ -11,20 +8,25 @@ import {
     getDateRangeFromDateRanges,
     getDateRangesBetweenDateRanges,
     getDatesInDateRange,
+    getDatesInMonthOutsideDateRange,
     getISODatesInISODateRange,
     getMonthDateRange,
     getMonthsInDateRange,
+    getNumberOfDaysInDateRange,
     getWeekDateRange,
+    getWeeksInDateRange,
     getYearsInDateRanges,
+    isDateInDateRange,
+    isDateInMaybeDateRange,
+    isDateInsideDateRange,
     isDateRange,
     ISODateRangeToDateRange,
     ISODateRangeToISODates,
     ISODateToDate,
+    ISODateToISODateRange,
     sortDateRange,
     sortDateRangeByToDate,
-    ISODateToISODateRange,
 } from '..';
-import { getDatesInMonthOutsideDateRange, getNumberOfDaysInDateRange, getWeeksInDateRange } from '../dateRangeUtils';
 
 describe('dateRangeUtils', () => {
     const from: Date = ISODateToDate('2020-01-01');

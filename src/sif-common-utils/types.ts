@@ -27,17 +27,20 @@ export enum Weekday {
 }
 
 export type DurationWeekdays = {
-    [Weekday.monday]?: DateDuration;
-    [Weekday.tuesday]?: DateDuration;
-    [Weekday.wednesday]?: DateDuration;
-    [Weekday.thursday]?: DateDuration;
-    [Weekday.friday]?: DateDuration;
+    [Weekday.monday]?: Duration;
+    [Weekday.tuesday]?: Duration;
+    [Weekday.wednesday]?: Duration;
+    [Weekday.thursday]?: Duration;
+    [Weekday.friday]?: Duration;
 };
 
-export interface DateDuration {
+export interface Duration {
     hours: string;
     minutes: string;
+}
+
+export interface DurationWithPercentage extends Duration {
     percentage?: number;
 }
 
-export type DateDurationMap = { [isoDate: ISODate]: Partial<DateDuration> };
+export type DateDurationMap = { [isoDate: ISODate]: Partial<Duration | DurationWithPercentage> };

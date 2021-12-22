@@ -1,6 +1,15 @@
 import { parse } from 'iso8601-duration';
 import { trim } from 'lodash';
-import { NumberDuration, ISODuration, DateDurationMap, DateDuration } from '.';
+import {
+    NumberDuration,
+    ISODuration,
+    DateDurationMap,
+    Duration,
+    isDateInDateRange,
+    ISODateToDate,
+    DateRange,
+    ISODate,
+} from '.';
 
 export const getPositiveNumberValue = (value: any): number | 'invalidNumberValue' | undefined => {
     if (typeof value === 'number' && value >= 0) {
@@ -21,19 +30,17 @@ export const getPositiveNumberValue = (value: any): number | 'invalidNumberValue
     return 'invalidNumberValue';
 };
 
-export const durationAsDateDuration = (duration: NumberDuration | Partial<DateDuration>): DateDuration => {
-    const d = ensureDurationIgnoreInvalid(duration);
+export const numberDurationAsDuration = (duration: NumberDuration | Partial<Duration>): Duration => {
+    const d = ensureNumberDuration(duration);
     return {
         hours: `${d.hours}`,
         minutes: `${d.minutes}`,
     };
 };
-export const DateDurationAsDuration = (duration: Partial<DateDuration>): NumberDuration =>
-    ensureDurationIgnoreInvalid(duration);
 
-export const ensureDurationIgnoreInvalid = (
-    duration: Partial<DateDuration> | Partial<NumberDuration>
-): NumberDuration => {
+export const durationAsNumberDuration = (duration: Partial<Duration>): NumberDuration => ensureNumberDuration(duration);
+
+export const ensureNumberDuration = (duration: Partial<Duration> | Partial<NumberDuration>): NumberDuration => {
     const hours = getPositiveNumberValue(duration.hours);
     const minutes = getPositiveNumberValue(duration.minutes);
 
@@ -46,22 +53,26 @@ export const ensureDurationIgnoreInvalid = (
     };
 };
 
-export const ensureDateDuration = (duration: Partial<DateDuration> | NumberDuration): DateDuration => {
-    return durationAsDateDuration(duration);
+export const ensureDuration = (duration: Partial<Duration> | NumberDuration): Duration => {
+    const d = ensureNumberDuration(duration);
+    return {
+        hours: `${d.hours}`,
+        minutes: `${d.minutes}`,
+    };
 };
 
-export const durationIsZero = (duration: NumberDuration | Partial<DateDuration>): boolean => {
+export const durationIsZero = (duration: NumberDuration | Partial<Duration>): boolean => {
     return durationToISODuration(duration) === 'PT0H0M';
 };
 
-export const durationToISODuration = (duration: NumberDuration | Partial<DateDuration>): ISODuration => {
-    const { hours, minutes } = ensureDurationIgnoreInvalid(duration);
+export const durationToISODuration = (duration: NumberDuration | Partial<Duration>): ISODuration => {
+    const { hours, minutes } = ensureNumberDuration(duration);
     return `PT${hours}H${minutes}M`;
 };
 
 export const durationsAreEqual = (
-    duration1?: Partial<DateDuration> | NumberDuration,
-    duration2?: Partial<DateDuration> | NumberDuration
+    duration1?: Partial<Duration> | NumberDuration,
+    duration2?: Partial<Duration> | NumberDuration
 ): boolean => {
     if (duration1 === undefined && duration2 === undefined) {
         return true;
@@ -73,13 +84,13 @@ export const durationsAreEqual = (
 };
 
 export const summarizeDurations = (
-    durations: Array<Partial<DateDuration> | NumberDuration | undefined>
+    durations: Array<Partial<Duration> | NumberDuration | undefined>
 ): NumberDuration => {
     let hours = 0;
     let minutes = 0;
     durations.forEach((duration) => {
         if (duration) {
-            const dur = ensureDurationIgnoreInvalid(duration);
+            const dur = ensureNumberDuration(duration);
             hours += dur.hours;
             minutes += dur.minutes;
         }
@@ -90,7 +101,7 @@ export const summarizeDurations = (
     };
 };
 
-export const ISODurationToDuration = (duration: string): NumberDuration => {
+export const ISODurationToNumberDuration = (duration: string): NumberDuration => {
     const parts = parse(duration);
     return {
         hours: parts.hours || 0,
@@ -98,7 +109,7 @@ export const ISODurationToDuration = (duration: string): NumberDuration => {
     };
 };
 
-export const ISODurationToDateDuration = (duration: string): DateDuration | undefined => {
+export const ISODurationToDuration = (duration: string): Duration | undefined => {
     try {
         const parts = parse(duration);
         return {
@@ -110,7 +121,7 @@ export const ISODurationToDateDuration = (duration: string): DateDuration | unde
     }
 };
 
-export const decimalDurationToDuration = (duration: number): NumberDuration => {
+export const decimalDurationToNumberDuration = (duration: number): NumberDuration => {
     const hours = Math.floor(duration);
     const minutes = Math.round(60 * (duration % 1));
     return {
@@ -119,19 +130,19 @@ export const decimalDurationToDuration = (duration: number): NumberDuration => {
     };
 };
 
-export const decimalDurationToDateDuration = (duration: number): DateDuration => {
+export const decimalDurationToDuration = (duration: number): Duration => {
     const hours = Math.floor(duration);
     const minutes = Math.round(60 * (duration % 1));
-    return durationAsDateDuration(
-        ensureDurationIgnoreInvalid({
+    return numberDurationAsDuration(
+        ensureNumberDuration({
             hours,
             minutes,
         })
     );
 };
 
-export const durationToDecimalDuration = (duration: NumberDuration | Partial<DateDuration>): number => {
-    const { hours, minutes } = ensureDurationIgnoreInvalid(duration);
+export const durationToDecimalDuration = (duration: NumberDuration | Partial<Duration>): number => {
+    const { hours, minutes } = ensureNumberDuration(duration);
     const decimalTime = hours + ((100 / 60) * minutes) / 100;
     return Math.round(decimalTime * 100) / 100;
 };
@@ -142,7 +153,7 @@ export const durationToDecimalDuration = (duration: NumberDuration | Partial<Dat
  * @returns
  */
 export const isValidDuration = (
-    duration: NumberDuration | Partial<DateDuration> | undefined
+    duration: NumberDuration | Partial<Duration> | undefined
 ): duration is NumberDuration => {
     if (!duration) {
         return false;
@@ -155,7 +166,7 @@ export const isValidDuration = (
     if (hours === undefined && minutes === undefined) {
         return false;
     }
-    const dur = ensureDurationIgnoreInvalid({ hours, minutes });
+    const dur = ensureNumberDuration({ hours, minutes });
     return dur.hours >= 0 && dur.minutes >= 0 && dur.minutes < 60;
 };
 
@@ -177,12 +188,77 @@ export const getDurationsDiff = (durations1: DateDurationMap, durations2: DateDu
     return resultMap;
 };
 
+export const getValidDurations = (durationMap: DateDurationMap): DateDurationMap => {
+    const cleanMap: DateDurationMap = {};
+    Object.keys(durationMap).forEach((key) => {
+        const duration = durationMap[key];
+        if (isValidDuration(duration)) {
+            cleanMap[key] = { ...duration };
+        }
+    });
+    return cleanMap;
+};
+
+export const summarizeDateDurationMap = (durationMap: DateDurationMap): NumberDuration => {
+    const durations = Object.keys(durationMap).map((key) => ensureNumberDuration(durationMap[key]));
+    return summarizeDurations(durations);
+};
+
+export const getDatesWithDurationLongerThanZero = (duration: DateDurationMap): ISODate[] =>
+    Object.keys(duration).filter((key) => {
+        const d = duration[key];
+        return isValidDuration(d) && durationIsZero(ensureDuration(d)) === false;
+    });
+
+/**
+ * Get all dates with duration in date range
+ * @param dateDurationMap
+ * @param dateRange
+ * @returns
+ */
+export const getDurationsInDateRange = (
+    dateDurationMap: DateDurationMap,
+    dateRange: DateRange,
+    removeInvalidDurations = true
+): DateDurationMap => {
+    const returnMap: DateDurationMap = {};
+    Object.keys(dateDurationMap).forEach((isoDate) => {
+        const date = ISODateToDate(isoDate);
+        if (date && isDateInDateRange(date, dateRange)) {
+            if (removeInvalidDurations && isValidDuration(dateDurationMap[isoDate]) === false) {
+                return;
+            }
+            returnMap[isoDate] = dateDurationMap[isoDate];
+        }
+        return false;
+    });
+    return returnMap;
+};
+
+/**
+ * Get all durations which is different in durations1 from durations2
+ * @param durations1
+ * @param durations2
+ * @returns
+ */
+export const getDateDurationDiff = (durations1: DateDurationMap, durations2: DateDurationMap): DateDurationMap => {
+    const resultMap: DateDurationMap = {};
+    Object.keys(durations1).forEach((isoDate) => {
+        const oldValue = durations2[isoDate];
+        if (oldValue && durationsAreEqual(durations1[isoDate], oldValue)) {
+            return;
+        }
+        resultMap[isoDate] = durations1[isoDate];
+    });
+    return resultMap;
+};
+
 const durationUtils = {
     durationToISODuration,
     durationToDecimalDuration,
-    decimalDurationToDuration,
+    decimalDurationToNumberDuration,
     isValidDuration,
-    ISODurationToDateDuration,
+    ISODurationToDuration,
 };
 
 export default durationUtils;
