@@ -85,20 +85,23 @@ export const getWorkDurationDiff = (durations1: WorkDurationMap, durations2: Wor
  * @param dateRange
  * @returns WorkDurationMap
  */
-export const getValidWorkDurationInDateRange = (
+export const getWorkDurationInDateRange = (
     workDurationMap: WorkDurationMap,
-    dateRange: DateRange
+    dateRange: DateRange,
+    removeInvalidDurations = true
 ): WorkDurationMap => {
-    const validWorkInDateRange: WorkDurationMap = {};
-    const validWork = getValidWorkDurations(workDurationMap);
-    Object.keys(validWork).forEach((isoDate) => {
+    const workInDateRange: WorkDurationMap = {};
+    Object.keys(workDurationMap).forEach((isoDate) => {
         const date = ISODateToDate(isoDate);
         if (date && isDateInDateRange(date, dateRange)) {
-            validWorkInDateRange[isoDate] = workDurationMap[isoDate];
+            if (removeInvalidDurations && isValidDuration(workDurationMap[isoDate].duration) === false) {
+                return;
+            }
+            workInDateRange[isoDate] = workDurationMap[isoDate];
         }
         return false;
     });
-    return validWorkInDateRange;
+    return workInDateRange;
 };
 
 /**

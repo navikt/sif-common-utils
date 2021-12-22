@@ -1,9 +1,8 @@
-import { WorkDurationMap, ISODateToDate } from '..';
+import { WorkDurationMap, ISODateToDate, getWorkDurationInDateRange } from '..';
 import {
     getValidWorkDurations,
     workDurationsAreEqual,
     getWorkDurationDiff,
-    getValidWorkDurationInDateRange,
     getDatesWithWorkDurationLongerThanZero,
     summarizeWorkDurationMap,
 } from '../workDurationUtils';
@@ -133,7 +132,7 @@ describe('workDurationUtils', () => {
             ).toBeFalsy();
         });
     });
-    describe('getValidWorkDurationInDateRange', () => {
+    describe('getWorkDurationInDateRange', () => {
         const data: WorkDurationMap = {
             '2021-01-01': { duration: { hours: '1', minutes: '2' } },
             '2021-01-02': { duration: { hours: '1', minutes: '2' } },
@@ -143,7 +142,33 @@ describe('workDurationUtils', () => {
         };
 
         it('returns only dates within the date range', () => {
-            const result = getValidWorkDurationInDateRange(data, {
+            const result = getWorkDurationInDateRange(data, {
+                from: ISODateToDate('2021-01-02'),
+                to: ISODateToDate('2021-01-03'),
+            });
+            expect(Object.keys(result).length).toBe(2);
+            expect(result['2021-01-02']).toBeDefined();
+            expect(result['2021-01-03']).toBeDefined();
+        });
+        it('returns only valid durations within the date range', () => {
+            const result = getWorkDurationInDateRange(
+                {
+                    '2021-01-01': { duration: { hours: 'a', minutes: '' } },
+                    '2021-01-02': { duration: { hours: '1', minutes: undefined } },
+                    '2021-01-03': { duration: { hours: '1', minutes: '2' } },
+                    '2021-01-05': { duration: { hours: undefined, minutes: '-1' } },
+                },
+                {
+                    from: ISODateToDate('2021-01-01'),
+                    to: ISODateToDate('2021-01-04'),
+                }
+            );
+            expect(Object.keys(result).length).toBe(2);
+            expect(result['2021-01-02']).toBeDefined();
+            expect(result['2021-01-03']).toBeDefined();
+        });
+        it('returns only dates within the date range, and keeps invalid dates if removeInvalidDates === false', () => {
+            const result = getWorkDurationInDateRange(data, {
                 from: ISODateToDate('2021-01-02'),
                 to: ISODateToDate('2021-01-03'),
             });
