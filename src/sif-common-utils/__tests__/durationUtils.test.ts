@@ -9,36 +9,39 @@ import {
     durationToISODuration,
     ensureDurationIgnoreInvalid,
     ensureInputDuration,
-    getNumberValue,
+    getPositiveNumberValue,
     inputDurationAsDuration,
     ISODurationToDuration,
     ISODurationToInputDuration,
     isValidDuration,
 } from '../';
-import { getDurationsDiff } from '../durationUtils';
+import { getDurationsDiff, summarizeDurations } from '../durationUtils';
 
 describe('durationUtils', () => {
-    describe('getNumberValue', () => {
+    describe('getPositiveNumberValue', () => {
         it('returns number when value is a number', () => {
-            expect(getNumberValue(0)).toEqual(0);
-            expect(getNumberValue(-20)).toEqual(-20);
+            expect(getPositiveNumberValue(0)).toEqual(0);
+            expect(getPositiveNumberValue(20)).toEqual(20);
         });
         it('returns number when value is a valid number string', () => {
-            expect(getNumberValue('0')).toEqual(0);
-            expect(getNumberValue('-20')).toEqual(-20);
+            expect(getPositiveNumberValue('0')).toEqual(0);
+            expect(getPositiveNumberValue('20')).toEqual(20);
         });
         it('returns undefined when value is undefined', () => {
-            expect(getNumberValue(undefined)).toBeUndefined();
+            expect(getPositiveNumberValue(undefined)).toBeUndefined();
         });
         it('returns undefined when value is empty string', () => {
-            expect(getNumberValue('')).toBeUndefined();
+            expect(getPositiveNumberValue('')).toBeUndefined();
         });
         it('returns invalidNumberValue when value is an invalid number string', () => {
-            expect(getNumberValue('a')).toEqual('invalidNumberValue');
+            expect(getPositiveNumberValue('a')).toEqual('invalidNumberValue');
+        });
+        it('returns invalidNumberValue when value is a negative number', () => {
+            expect(getPositiveNumberValue(-1)).toEqual('invalidNumberValue');
         });
         it('returns invalidNumberValue when value is another type than number, string or undefined', () => {
-            expect(getNumberValue([])).toEqual('invalidNumberValue');
-            expect(getNumberValue({})).toEqual('invalidNumberValue');
+            expect(getPositiveNumberValue([])).toEqual('invalidNumberValue');
+            expect(getPositiveNumberValue({})).toEqual('invalidNumberValue');
         });
     });
     describe('durationAsInputDuration', () => {
@@ -253,6 +256,26 @@ describe('durationUtils', () => {
             const duration = ensureInputDuration({ hours: 1, minutes: 2 });
             expect(duration.hours).toEqual('1');
             expect(duration.minutes).toEqual('2');
+        });
+    });
+    describe('summarizeDurations', () => {
+        const dur1: NumberDuration = ISODurationToDuration('PT2H0M');
+        const dur2: NumberDuration = ISODurationToDuration('PT2H0M');
+        const dur3: NumberDuration = ISODurationToDuration('PT3H1M');
+        it('sums durations in array correctly when all durations are valid', () => {
+            const result = summarizeDurations([dur1, dur2, dur3]);
+            expect(result.hours).toBe(7);
+            expect(result.minutes).toBe(1);
+        });
+        it('sums durations in array correctly when it contains invalid durations', () => {
+            const result = summarizeDurations([dur1, dur2, dur3, { hours: -1, minutes: -1 }]);
+            expect(result.hours).toBe(7);
+            expect(result.minutes).toBe(1);
+        });
+        it('sums durations in array correctly when it contains undefined durations', () => {
+            const result = summarizeDurations([dur1, dur2, dur3, undefined, { hours: -1, minutes: -1 }]);
+            expect(result.hours).toBe(7);
+            expect(result.minutes).toBe(1);
         });
     });
     describe('durationsAreEqual', () => {

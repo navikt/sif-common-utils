@@ -18,8 +18,8 @@ export interface NumberDuration {
     minutes: number;
 }
 export interface InputDuration {
-    hours?: string;
-    minutes?: string;
+    hours: string;
+    minutes: string;
 }
 
 export enum Weekday {
