@@ -35,9 +35,9 @@ export type DurationWeekdays = {
 };
 
 export interface DateDuration {
-    hours?: string;
-    minutes?: string;
+    hours: string;
+    minutes: string;
     percentage?: number;
 }
 
-export type DateDurationMap = { [isoDate: ISODate]: DateDuration };
+export type DateDurationMap = { [isoDate: ISODate]: Partial<DateDuration> };
