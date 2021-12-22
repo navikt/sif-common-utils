@@ -1,7 +1,7 @@
 import {
     decimalDurationToDuration,
     decimalDurationToInputDuration,
-    Duration,
+    NumberDuration,
     durationAsInputDuration,
     durationIsZero,
     durationsAreEqual,
@@ -62,10 +62,10 @@ describe('durationUtils', () => {
             expect(durationToISODuration({ hours: 0, minutes: 0 })).toEqual('PT0H0M');
         });
         it('converts {h: undefined, m: 0} to ISODuration', () => {
-            expect(durationToISODuration({ minutes: 0 })).toEqual('PT0H0M');
+            expect(durationToISODuration({ minutes: '0' })).toEqual('PT0H0M');
         });
         it('converts {h: 1, m: undefined} to ISODuration', () => {
-            expect(durationToISODuration({ hours: 1 })).toEqual('PT1H0M');
+            expect(durationToISODuration({ hours: '1' })).toEqual('PT1H0M');
         });
     });
     describe('ISODurationToDuration', () => {
@@ -194,10 +194,10 @@ describe('durationUtils', () => {
             expect(durationIsZero({})).toBeTruthy();
         });
         it('fails if hours is more than zero', () => {
-            expect(durationIsZero({ hours: 1 })).toBeFalsy();
+            expect(durationIsZero({ hours: '1' })).toBeFalsy();
         });
         it('fails if minutes is more than 0', () => {
-            expect(durationIsZero({ minutes: 1 })).toBeFalsy();
+            expect(durationIsZero({ minutes: '1' })).toBeFalsy();
         });
     });
 
@@ -245,7 +245,7 @@ describe('durationUtils', () => {
             expect(duration.minutes).toEqual('0');
         });
         it('keeps minutes if hours are defined and minutes are undefined', () => {
-            const duration = ensureInputDuration({ minutes: 1 });
+            const duration = ensureInputDuration({ minutes: '1' });
             expect(duration.hours).toEqual('0');
             expect(duration.minutes).toEqual('1');
         });
@@ -256,9 +256,9 @@ describe('durationUtils', () => {
         });
     });
     describe('durationsAreEqual', () => {
-        const dur1: Duration = ISODurationToDuration('PT2H0M');
-        const dur2: Duration = ISODurationToDuration('PT2H0M');
-        const dur3: Duration = ISODurationToDuration('PT3H0M');
+        const dur1: NumberDuration = ISODurationToDuration('PT2H0M');
+        const dur2: NumberDuration = ISODurationToDuration('PT2H0M');
+        const dur3: NumberDuration = ISODurationToDuration('PT3H0M');
 
         it('returns true if both are undefined', () => {
             expect(durationsAreEqual(undefined, undefined)).toBeTruthy();

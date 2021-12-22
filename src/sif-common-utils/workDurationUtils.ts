@@ -11,7 +11,7 @@ import {
     ISODateToDate,
     isValidDuration,
     WorkDuration,
-    Duration,
+    NumberDuration,
     summarizeDurations,
     ensureDurationIgnoreInvalid,
     ensureInputDuration,
@@ -44,7 +44,7 @@ export const getValidWorkDurations = (workDurationMap: WorkDurationMap): WorkDur
  * @param workDuration
  * @returns
  */
-export const summarizeWorkDurationMap = (workDuration: WorkDurationMap): Duration => {
+export const summarizeWorkDurationMap = (workDuration: WorkDurationMap): NumberDuration => {
     const durations = Object.keys(workDuration).map((key) => ensureDurationIgnoreInvalid(workDuration[key].duration));
     return summarizeDurations(durations);
 };

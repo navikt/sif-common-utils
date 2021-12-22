@@ -13,16 +13,14 @@ export interface DateRange {
 }
 export type MaybeDateRange = Partial<DateRange>;
 
-export interface Duration {
+export interface NumberDuration {
     hours: number;
     minutes: number;
 }
 export interface InputDuration {
-    hours: string;
-    minutes: string;
+    hours?: string;
+    minutes?: string;
 }
-
-export type DecimalTime = number;
 
 export enum Weekday {
     'monday' = 'monday',
@@ -47,4 +45,4 @@ export interface WorkDuration {
 
 export type WorkDurationMap = { [isoDate: ISODate]: WorkDuration };
 
-export type DateDurationMap = { [isoDate: ISODate]: Partial<Duration> | Partial<InputDuration> };
+export type DateDurationMap = { [isoDate: ISODate]: Partial<InputDuration> };

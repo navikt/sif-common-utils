@@ -126,7 +126,7 @@ describe('dateDurationUtils', () => {
                     '2021-01-01': { hours: 'a', minutes: '' },
                     '2021-01-02': { hours: '1', minutes: undefined },
                     '2021-01-03': { hours: '1', minutes: '2' },
-                    '2021-01-05': { hours: undefined, minutes: -1 },
+                    '2021-01-05': { hours: undefined, minutes: '-1' },
                 },
                 {
                     from: ISODateToDate('2021-01-01'),

@@ -1,7 +1,7 @@
 import {
     DateDurationMap,
     DateRange,
-    Duration,
+    NumberDuration,
     durationIsZero,
     durationsAreEqual,
     ensureDurationIgnoreInvalid,
@@ -24,7 +24,7 @@ export const getValidDateDurations = (durationMap: DateDurationMap): DateDuratio
     return cleanMap;
 };
 
-export const summarizeDateDurationMap = (durationMap: DateDurationMap): Duration => {
+export const summarizeDateDurationMap = (durationMap: DateDurationMap): NumberDuration => {
     const durations = Object.keys(durationMap).map((key) => ensureDurationIgnoreInvalid(durationMap[key]));
     return summarizeDurations(durations);
 };

@@ -1,6 +1,6 @@
 import { parse } from 'iso8601-duration';
 import { trim } from 'lodash';
-import { Duration, InputDuration, ISODuration, DateDurationMap } from '.';
+import { NumberDuration, InputDuration, ISODuration, DateDurationMap } from '.';
 
 export const getNumberValue = (value: any): number | 'invalidNumberValue' | undefined => {
     if (typeof value === 'number') {
@@ -21,17 +21,17 @@ export const getNumberValue = (value: any): number | 'invalidNumberValue' | unde
     return 'invalidNumberValue';
 };
 
-export const durationAsInputDuration = (duration: Partial<Duration | InputDuration>): InputDuration => {
+export const durationAsInputDuration = (duration: NumberDuration | InputDuration): InputDuration => {
     const d = ensureDurationIgnoreInvalid(duration);
     return {
         hours: `${d.hours}`,
         minutes: `${d.minutes}`,
     };
 };
-export const inputDurationAsDuration = (duration: Partial<InputDuration>): Duration =>
+export const inputDurationAsDuration = (duration: InputDuration): NumberDuration =>
     ensureDurationIgnoreInvalid(duration);
 
-export const ensureDurationIgnoreInvalid = (duration: Partial<InputDuration | Duration>): Duration => {
+export const ensureDurationIgnoreInvalid = (duration: InputDuration | Partial<NumberDuration>): NumberDuration => {
     const hours = getNumberValue(duration.hours);
     const minutes = getNumberValue(duration.minutes);
 
@@ -44,21 +44,21 @@ export const ensureDurationIgnoreInvalid = (duration: Partial<InputDuration | Du
     };
 };
 
-export const ensureInputDuration = (duration: Partial<InputDuration | Duration>): InputDuration => {
+export const ensureInputDuration = (duration: InputDuration | NumberDuration): InputDuration => {
     return durationAsInputDuration(duration);
 };
 
-export const durationIsZero = (duration: Partial<Duration | InputDuration>): boolean => {
+export const durationIsZero = (duration: NumberDuration | InputDuration): boolean => {
     return durationToISODuration(duration) === 'PT0H0M';
 };
 
-export const durationToISODuration = ({ hours, minutes }: Partial<Duration | InputDuration>): ISODuration => {
+export const durationToISODuration = ({ hours, minutes }: NumberDuration | InputDuration): ISODuration => {
     return `PT${hours || 0}H${minutes || 0}M`;
 };
 
 export const durationsAreEqual = (
-    duration1?: Partial<InputDuration | Duration>,
-    duration2?: Partial<InputDuration | Duration>
+    duration1?: InputDuration | NumberDuration,
+    duration2?: InputDuration | NumberDuration
 ): boolean => {
     if (duration1 === undefined && duration2 === undefined) {
         return true;
@@ -69,7 +69,7 @@ export const durationsAreEqual = (
     return durationToISODuration(duration1) === durationToISODuration(duration2);
 };
 
-export const summarizeDurations = (durations: Array<InputDuration | Duration | undefined>): Duration => {
+export const summarizeDurations = (durations: Array<InputDuration | NumberDuration | undefined>): NumberDuration => {
     let hours = 0;
     let minutes = 0;
     durations.forEach((duration) => {
@@ -85,7 +85,7 @@ export const summarizeDurations = (durations: Array<InputDuration | Duration | u
     };
 };
 
-export const ISODurationToDuration = (duration: string): Duration => {
+export const ISODurationToDuration = (duration: string): NumberDuration => {
     const parts = parse(duration);
     return {
         hours: parts.hours || 0,
@@ -105,7 +105,7 @@ export const ISODurationToInputDuration = (duration: string): InputDuration | un
     }
 };
 
-export const decimalDurationToDuration = (duration: number): Duration => {
+export const decimalDurationToDuration = (duration: number): NumberDuration => {
     const hours = Math.floor(duration);
     const minutes = Math.round(60 * (duration % 1));
     return {
@@ -125,7 +125,7 @@ export const decimalDurationToInputDuration = (duration: number): InputDuration 
     );
 };
 
-export const durationToDecimalDuration = (duration: Partial<Duration> | Partial<InputDuration>): number => {
+export const durationToDecimalDuration = (duration: NumberDuration | InputDuration): number => {
     const { hours, minutes } = ensureDurationIgnoreInvalid(duration);
     const decimalTime = hours + ((100 / 60) * minutes) / 100;
     return Math.round(decimalTime * 100) / 100;
@@ -136,7 +136,7 @@ export const durationToDecimalDuration = (duration: Partial<Duration> | Partial<
  * @param duration
  * @returns
  */
-export const isValidDuration = (duration: Partial<Duration | InputDuration> | undefined): duration is Duration => {
+export const isValidDuration = (duration: NumberDuration | InputDuration | undefined): duration is NumberDuration => {
     if (!duration) {
         return false;
     }

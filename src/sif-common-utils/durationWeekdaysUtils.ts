@@ -1,6 +1,6 @@
-import { Duration, DurationWeekdays, summarizeDurations } from '.';
+import { NumberDuration, DurationWeekdays, summarizeDurations } from '.';
 
-export const summarizeDurationWeekDays = (weekdays: DurationWeekdays): Duration => {
+export const summarizeDurationWeekDays = (weekdays: DurationWeekdays): NumberDuration => {
     return summarizeDurations([
         weekdays.monday,
         weekdays.tuesday,
