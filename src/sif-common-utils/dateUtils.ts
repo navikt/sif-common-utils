@@ -56,7 +56,7 @@ export const getFirstOfTwoDates = (date1: Date, date2: Date): Date => {
     return dayjs(date1).isAfter(date2, 'day') ? date2 : date1;
 };
 
-const dateUtils = {
+export const dateUtils = {
     dateToday,
     ISODateToDate,
     dateToISODate,
@@ -66,5 +66,3 @@ const dateUtils = {
     getFirstWeekDayInMonth,
     getLastWeekDayInMonth,
 };
-
-export default dateUtils;

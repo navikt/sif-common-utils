@@ -7,7 +7,7 @@ const compactFormat = 'DD.MM.YYYY';
 const extendedFormat = 'D. MMM YYYY';
 const fullFormat = 'D. MMMM YYYY';
 
-const dateFormatter = {
+export const dateFormatter = {
     /**
      *
      * @param date: Date
@@ -71,5 +71,3 @@ const dateFormatter = {
      */
     dayFullShortDate: (date: Date) => `${dayjs(date).format('dddd')} ${dayjs(date).format('DD.MM.YY')}`,
 };
-
-export default dateFormatter;

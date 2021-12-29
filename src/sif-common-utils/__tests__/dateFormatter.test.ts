@@ -1,5 +1,5 @@
 import { ISODateToDate } from '..';
-import dateFormatter from '../dateFormatter';
+import { dateFormatter } from '../dateFormatter';
 
 describe('dateFormatter', () => {
     const date = ISODateToDate('2021-01-01');

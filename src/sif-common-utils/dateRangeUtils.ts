@@ -360,7 +360,7 @@ export const ISODateToISODateRange = (isoDate: ISODate): ISODateRange => {
     return `${isoDate}/${isoDate}`;
 };
 
-const dateRangeUtils = {
+export const dateRangeUtils = {
     sort: {
         sortDateRange,
         sortDateRangeByToDate,
@@ -388,5 +388,3 @@ const dateRangeUtils = {
     getDateRangeFromDateRanges,
     getDateRangesBetweenDateRanges,
 };
-
-export default dateRangeUtils;

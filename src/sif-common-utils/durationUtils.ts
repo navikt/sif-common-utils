@@ -253,15 +253,13 @@ export const getDateDurationDiff = (durations1: DateDurationMap, durations2: Dat
     return resultMap;
 };
 
-const durationUtils = {
+export const durationUtils = {
     durationToISODuration,
     durationToDecimalDuration,
     decimalDurationToNumberDuration,
     isValidDuration,
     ISODurationToDuration,
 };
-
-export default durationUtils;
 
 // /**
 //  *
