@@ -9,15 +9,7 @@ dayjs.extend(isoWeek);
 
 const ISODateFormat = 'YYYY-MM-DD';
 
-const prettyDateFormat = 'DD.MM.YYYY';
-const prettyDateFormatExtended = 'D. MMM. YYYY';
-const prettyDateFormatFull = 'D. MMMM YYYY';
-
 export const dateToday = dayjs.utc().toDate();
-
-export const prettifyDate = (date: Date): string => dayjs(date).format(prettyDateFormat);
-export const prettifyDateExtended = (date: Date) => dayjs(date).format(prettyDateFormatExtended);
-export const prettifyDateFull = (date: Date) => dayjs(date).format(prettyDateFormatFull);
 
 export const dateToISODate = (date: Date): ISODate => dayjs(date).format(ISODateFormat);
 
@@ -66,9 +58,6 @@ export const getFirstOfTwoDates = (date1: Date, date2: Date): Date => {
 
 const dateUtils = {
     dateToday,
-    prettifyDate,
-    prettifyDateExtended,
-    prettifyDateFull,
     ISODateToDate,
     dateToISODate,
     getDatesInMonth,
