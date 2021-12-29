@@ -356,35 +356,33 @@ export const getISODatesInISODateRange = (range: ISODateRange, onlyWeekDays = fa
         .map((date) => dateToISODate(date));
 };
 
+/**
+ * Return an ISODateRange with the same from and to date
+ * @param isoDate
+ * @returns ISODateRange
+ */
+
 export const ISODateToISODateRange = (isoDate: ISODate): ISODateRange => {
     return `${isoDate}/${isoDate}`;
 };
 
 export const dateRangeUtils = {
-    sort: {
-        sortDateRange,
-        sortDateRangeByToDate,
-    },
-    date: {
-        isDateInMaybeDateRange,
-        isDateInDateRange,
-        isDateInsideDateRange,
-    },
-    iso: {
-        dateRangeToISODateRange,
-        ISODateRangeToDateRange,
-        ISODateRangeToISODates,
-        ISODateToISODateRange,
-    },
-    isDateRange,
     dateRangesCollide,
+    dateRangeToISODateRange,
     datesCollideWithDateRanges,
-    getMonthsInDateRange,
-    getWeekDateRange,
-    getMonthDateRange,
-    getNumberOfDaysInDateRange,
-    getFirstWeekDayInMonth,
-    getLastWeekDayInMonth,
     getDateRangeFromDateRanges,
     getDateRangesBetweenDateRanges,
+    getMonthDateRange,
+    getMonthsInDateRange,
+    getNumberOfDaysInDateRange,
+    getWeekDateRange,
+    isDateInDateRange,
+    isDateInMaybeDateRange,
+    isDateInsideDateRange,
+    isDateRange,
+    ISODateRangeToDateRange,
+    ISODateRangeToISODates,
+    ISODateToISODateRange,
+    sortDateRange,
+    sortDateRangeByToDate,
 };

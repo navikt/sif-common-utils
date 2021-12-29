@@ -58,11 +58,14 @@ export const getFirstOfTwoDates = (date1: Date, date2: Date): Date => {
 
 export const dateUtils = {
     dateToday,
-    ISODateToDate,
     dateToISODate,
     getDatesInMonth,
+    getFirstOfTwoDates,
+    getFirstWeekDayInMonth,
+    getISOWeekdayFromISODate,
+    getLastWeekDayInMonth,
+    getYearMonthKey,
     isDateInDates,
     isDateWeekDay,
-    getFirstWeekDayInMonth,
-    getLastWeekDayInMonth,
+    ISODateToDate,
 };

@@ -254,22 +254,24 @@ export const getDateDurationDiff = (durations1: DateDurationMap, durations2: Dat
 };
 
 export const durationUtils = {
-    durationToISODuration,
-    durationToDecimalDuration,
+    decimalDurationToDuration,
     decimalDurationToNumberDuration,
-    isValidDuration,
+    durationAsNumberDuration,
+    durationIsZero,
+    durationsAreEqual,
+    durationToDecimalDuration,
+    durationToISODuration,
+    ensureDuration,
+    ensureNumberDuration,
+    getDateDurationDiff,
+    getDatesWithDurationLongerThanZero,
+    getDurationsDiff,
+    getDurationsInDateRange,
+    getValidDurations,
     ISODurationToDuration,
+    ISODurationToNumberDuration,
+    isValidDuration,
+    numberDurationAsDuration,
+    summarizeDateDurationMap,
+    summarizeDurations,
 };
-
-// /**
-//  *
-//  * @param time Time
-//  * @param intl intlShape
-//  * @param hideZeroMinutes do not print minutes if 0 minutes
-//  */
-// export const timeToString = (time: Time, intl: IntlShape, hideZeroMinutes?: boolean): string => {
-//     if (hideZeroMinutes && duration.minutes === '0') {
-//         return intlHelper(intl, 'timer', { timer: duration.hours });
-//     }
-//     return intlHelper(intl, 'timerOgMinutter', { timer: duration.hours, minutter: duration.minutes });
-// };
