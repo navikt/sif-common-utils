@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import utc from 'dayjs/plugin/utc';
-import { ISODate } from '.';
+import { DateRange, getWeeksInDateRange, ISODate } from '.';
 import { getDatesInDateRange, getMonthDateRange } from './dateRangeUtils';
 
 dayjs.extend(utc);
@@ -33,10 +33,36 @@ export const getFirstWeekDayInMonth = (month: Date): Date => {
     return firstDay.toDate();
 };
 
+export const getWeekFromDate = (date: Date, withinSameMonth = false): DateRange => {
+    const from = dayjs(date).startOf('isoWeek').toDate();
+    const to = dayjs(date).endOf('isoWeek').toDate();
+
+    if (withinSameMonth === false || (dayjs(date).isSame(from, 'month') && dayjs(date).isSame(to, 'month'))) {
+        return {
+            from,
+            to,
+        };
+    }
+    return {
+        from: getLastOfTwoDates(from, dayjs(date).startOf('month').toDate()),
+        to: getFirstOfTwoDates(to, dayjs(date).endOf('month').toDate()),
+    };
+};
+
 export const getLastWeekDayInMonth = (month: Date): Date => {
     const lastDate = dayjs(month).endOf('month');
     const isoWeekDay = lastDate.isoWeekday();
     return isoWeekDay <= 5 ? lastDate.toDate() : lastDate.startOf('isoWeek').add(4, 'days').toDate();
+};
+
+export const getWeeksInMonth = (month: Date, withinSameMonth = false): DateRange[] => {
+    const range = getMonthDateRange(month);
+    return getWeeksInDateRange({
+        from: withinSameMonth
+            ? range.from
+            : getFirstOfTwoDates(range.from, dayjs(range.from).startOf('isoWeek').toDate()),
+        to: withinSameMonth ? range.to : getLastOfTwoDates(range.to, dayjs(range.to).endOf('isoWeek').toDate()),
+    });
 };
 
 export const isDateWeekDay = (date: Date): boolean => {
@@ -56,12 +82,17 @@ export const getFirstOfTwoDates = (date1: Date, date2: Date): Date => {
     return dayjs(date1).isAfter(date2, 'day') ? date2 : date1;
 };
 
+export const getLastOfTwoDates = (date1: Date, date2: Date): Date => {
+    return dayjs(date1).isBefore(date2, 'day') ? date2 : date1;
+};
+
 export const dateUtils = {
     dateToday,
     dateToISODate,
     getDatesInMonth,
     getFirstOfTwoDates,
     getFirstWeekDayInMonth,
+    getLastOfTwoDates,
     getISOWeekdayFromISODate,
     getLastWeekDayInMonth,
     getYearMonthKey,
