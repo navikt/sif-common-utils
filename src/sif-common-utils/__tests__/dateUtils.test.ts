@@ -170,21 +170,21 @@ describe('dateUtils', () => {
 
     describe('getWeeksInMonth', () => {
         const month: Date = ISODateToDate('2021-05-01');
-        it('returns the correct whole weeks in a month', () => {
+        it('returns the correct weeks within a month', () => {
             const weeks = getWeeksInMonth(month);
-            expect(weeks.length).toBe(6);
-            expect(dateToISODate(weeks[0].from)).toEqual('2021-04-26');
-            expect(dateToISODate(weeks[0].to)).toEqual('2021-05-02');
-            expect(dateToISODate(weeks[5].from)).toEqual('2021-05-31');
-            expect(dateToISODate(weeks[5].to)).toEqual('2021-06-06');
-        });
-        it('returns the correct weeks in a month, dates within month', () => {
-            const weeks = getWeeksInMonth(month, true);
             expect(weeks.length).toBe(6);
             expect(dateToISODate(weeks[0].from)).toEqual('2021-05-01');
             expect(dateToISODate(weeks[0].to)).toEqual('2021-05-02');
             expect(dateToISODate(weeks[5].from)).toEqual('2021-05-31');
             expect(dateToISODate(weeks[5].to)).toEqual('2021-05-31');
+        });
+        it('returns the correct whole weeks in a month, including dates outside month', () => {
+            const weeks = getWeeksInMonth(month, true);
+            expect(weeks.length).toBe(6);
+            expect(dateToISODate(weeks[0].from)).toEqual('2021-04-26');
+            expect(dateToISODate(weeks[0].to)).toEqual('2021-05-02');
+            expect(dateToISODate(weeks[5].from)).toEqual('2021-05-31');
+            expect(dateToISODate(weeks[5].to)).toEqual('2021-06-06');
         });
     });
 });

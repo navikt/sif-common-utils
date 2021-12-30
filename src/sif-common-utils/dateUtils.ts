@@ -55,13 +55,17 @@ export const getLastWeekDayInMonth = (month: Date): Date => {
     return isoWeekDay <= 5 ? lastDate.toDate() : lastDate.startOf('isoWeek').add(4, 'days').toDate();
 };
 
-export const getWeeksInMonth = (month: Date, withinSameMonth = false): DateRange[] => {
+export const getWeeksInMonth = (month: Date, includeWholeWeeks = false): DateRange[] => {
     const range = getMonthDateRange(month);
     return getWeeksInDateRange({
-        from: withinSameMonth
-            ? range.from
-            : getFirstOfTwoDates(range.from, dayjs(range.from).startOf('isoWeek').toDate()),
-        to: withinSameMonth ? range.to : getLastOfTwoDates(range.to, dayjs(range.to).endOf('isoWeek').toDate()),
+        from:
+            includeWholeWeeks === false
+                ? range.from
+                : getFirstOfTwoDates(range.from, dayjs(range.from).startOf('isoWeek').toDate()),
+        to:
+            includeWholeWeeks === false
+                ? range.to
+                : getLastOfTwoDates(range.to, dayjs(range.to).endOf('isoWeek').toDate()),
     });
 };
 
