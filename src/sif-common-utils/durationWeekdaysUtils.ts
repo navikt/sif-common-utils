@@ -10,10 +10,7 @@ export const summarizeDurationWeekDays = (weekdays: DurationWeekdays): NumberDur
     ]);
 };
 
-export const getDurationForWeekday = (
-    durationWeekdays: DurationWeekdays,
-    weekday: 1 | 2 | 3 | 4 | 5
-): Duration | undefined => {
+export const getDurationForWeekday = (durationWeekdays: DurationWeekdays, weekday: number): Duration | undefined => {
     switch (weekday) {
         case 1:
             return durationWeekdays.monday;
