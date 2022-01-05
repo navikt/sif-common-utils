@@ -1,6 +1,6 @@
 import { NumberDuration, DurationWeekdays, summarizeDurations, Duration } from '.';
 
-export const summarizeDurationWeekDays = (weekdays: DurationWeekdays): NumberDuration => {
+export const summarizeDurationInDurationWeekdays = (weekdays: DurationWeekdays): NumberDuration => {
     return summarizeDurations([
         weekdays.monday,
         weekdays.tuesday,
@@ -10,7 +10,7 @@ export const summarizeDurationWeekDays = (weekdays: DurationWeekdays): NumberDur
     ]);
 };
 
-export const getDurationForWeekday = (durationWeekdays: DurationWeekdays, weekday: number): Duration | undefined => {
+export const getDurationForISOWeekday = (durationWeekdays: DurationWeekdays, weekday: number): Duration | undefined => {
     switch (weekday) {
         case 1:
             return durationWeekdays.monday;

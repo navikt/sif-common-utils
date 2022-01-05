@@ -1,10 +1,10 @@
-import { DurationWeekdays, getDurationForWeekday } from '..';
-import { summarizeDurationWeekDays } from '../durationWeekdaysUtils';
+import { DurationWeekdays, getDurationForISOWeekday } from '..';
+import { summarizeDurationInDurationWeekdays } from '../durationWeekdaysUtils';
 
 describe('workDurationUtils', () => {
-    describe('summarizeDurationWeekDays', () => {
+    describe('summarizeDurationInDurationWeekdays', () => {
         it('sum hours correctly', () => {
-            const sum = summarizeDurationWeekDays({
+            const sum = summarizeDurationInDurationWeekdays({
                 monday: { hours: '1', minutes: '0' },
                 tuesday: { hours: '1', minutes: '0' },
                 wednesday: { hours: '1', minutes: '0' },
@@ -15,7 +15,7 @@ describe('workDurationUtils', () => {
             expect(sum.minutes).toBe(0);
         });
         it('sum hours and minutes correctly', () => {
-            const sum = summarizeDurationWeekDays({
+            const sum = summarizeDurationInDurationWeekdays({
                 monday: { hours: '1', minutes: '5' },
                 tuesday: { hours: '1', minutes: '5' },
                 wednesday: { hours: '1', minutes: '5' },
@@ -26,7 +26,7 @@ describe('workDurationUtils', () => {
             expect(sum.minutes).toBe(30);
         });
     });
-    describe('getDurationForWeekday', () => {
+    describe('getDurationForISOWeekday', () => {
         const durations: DurationWeekdays = {
             monday: { hours: '1', minutes: '0' },
             tuesday: { hours: '2', minutes: '0' },
@@ -35,31 +35,31 @@ describe('workDurationUtils', () => {
             friday: { hours: '5', minutes: '0' },
         };
         it('returns correctly for monday', () => {
-            const result = getDurationForWeekday(durations, 1);
+            const result = getDurationForISOWeekday(durations, 1);
             expect(result).toBeDefined();
             expect(result?.hours).toEqual('1');
             expect(result?.minutes).toEqual('0');
         });
         it('returns correctly for tuesday', () => {
-            const result = getDurationForWeekday(durations, 2);
+            const result = getDurationForISOWeekday(durations, 2);
             expect(result).toBeDefined();
             expect(result?.hours).toEqual('2');
             expect(result?.minutes).toEqual('0');
         });
         it('returns correctly for wednesday', () => {
-            const result = getDurationForWeekday(durations, 3);
+            const result = getDurationForISOWeekday(durations, 3);
             expect(result).toBeDefined();
             expect(result?.hours).toEqual('3');
             expect(result?.minutes).toEqual('0');
         });
         it('returns correctly for thursday', () => {
-            const result = getDurationForWeekday(durations, 4);
+            const result = getDurationForISOWeekday(durations, 4);
             expect(result).toBeDefined();
             expect(result?.hours).toEqual('4');
             expect(result?.minutes).toEqual('0');
         });
         it('returns correctly for friday', () => {
-            const result = getDurationForWeekday(durations, 5);
+            const result = getDurationForISOWeekday(durations, 5);
             expect(result).toBeDefined();
             expect(result?.hours).toEqual('5');
             expect(result?.minutes).toEqual('0');
