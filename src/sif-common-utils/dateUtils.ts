@@ -50,9 +50,16 @@ export const getWeekFromDate = (date: Date, withinSameMonth = false): DateRange 
 };
 
 export const getLastWeekDayInMonth = (month: Date): Date => {
-    const lastDate = dayjs(month).endOf('month');
-    const isoWeekDay = lastDate.isoWeekday();
-    return isoWeekDay <= 5 ? lastDate.toDate() : lastDate.startOf('isoWeek').add(4, 'days').toDate();
+    return getLastWeekdayOnOrBeforeDate(dayjs(month).endOf('month').toDate());
+};
+
+export const getLastWeekdayOnOrBeforeDate = (date: Date): Date => {
+    const isoWeekDay = dayjs(date).isoWeekday();
+    return isoWeekDay <= 5 ? date : dayjs(date).startOf('isoWeek').add(4, 'days').toDate();
+};
+export const getFirstWeekdayOnOrAfterDate = (date: Date): Date => {
+    const isoWeekDay = dayjs(date).isoWeekday();
+    return isoWeekDay <= 5 ? date : dayjs(date).endOf('isoWeek').add(1, 'days').toDate();
 };
 
 export const getWeeksInMonth = (month: Date, includeWholeWeeks = false): DateRange[] => {

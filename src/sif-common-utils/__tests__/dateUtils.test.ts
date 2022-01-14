@@ -12,6 +12,8 @@ import {
     getWeekFromDate,
     getLastOfTwoDates,
     getWeeksInMonth,
+    getLastWeekdayOnOrBeforeDate,
+    getFirstWeekdayOnOrAfterDate,
 } from '..';
 
 describe('dateUtils', () => {
@@ -185,6 +187,39 @@ describe('dateUtils', () => {
             expect(dateToISODate(weeks[0].to)).toEqual('2021-05-02');
             expect(dateToISODate(weeks[5].from)).toEqual('2021-05-31');
             expect(dateToISODate(weeks[5].to)).toEqual('2021-06-06');
+        });
+    });
+
+    describe('getLastWeekdayOnOrBeforeDate', () => {
+        const monday = ISODateToDate('2022-08-01');
+        const friday = ISODateToDate('2022-08-05');
+        const saturday = ISODateToDate('2022-08-06');
+        const sunday = ISODateToDate('2022-08-07');
+        it('returns correct same date if date is a weekday', () => {
+            expect(dateToISODate(getLastWeekdayOnOrBeforeDate(monday))).toEqual('2022-08-01');
+            expect(dateToISODate(getLastWeekdayOnOrBeforeDate(friday))).toEqual('2022-08-05');
+        });
+        it('returns friday before date if date is a saturday', () => {
+            expect(dateToISODate(getLastWeekdayOnOrBeforeDate(saturday))).toEqual('2022-08-05');
+        });
+        it('returns friday before date if date is a sunday', () => {
+            expect(dateToISODate(getLastWeekdayOnOrBeforeDate(sunday))).toEqual('2022-08-05');
+        });
+    });
+    describe('getFirstWeekdayOnOrAfterDate', () => {
+        const monday = ISODateToDate('2022-08-01');
+        const friday = ISODateToDate('2022-08-05');
+        const saturday = ISODateToDate('2022-08-06');
+        const sunday = ISODateToDate('2022-08-07');
+        it('returns correct same date if date is a weekday', () => {
+            expect(dateToISODate(getFirstWeekdayOnOrAfterDate(monday))).toEqual('2022-08-01');
+            expect(dateToISODate(getFirstWeekdayOnOrAfterDate(friday))).toEqual('2022-08-05');
+        });
+        it('returns friday before date if date is a saturday', () => {
+            expect(dateToISODate(getFirstWeekdayOnOrAfterDate(saturday))).toEqual('2022-08-08');
+        });
+        it('returns friday before date if date is a sunday', () => {
+            expect(dateToISODate(getFirstWeekdayOnOrAfterDate(sunday))).toEqual('2022-08-08');
         });
     });
 });
