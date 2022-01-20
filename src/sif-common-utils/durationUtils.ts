@@ -9,6 +9,7 @@ import {
     ISODateToDate,
     DateRange,
     ISODate,
+    InputDateDurationMap,
 } from '.';
 
 export const getPositiveNumberValue = (value: any): number | 'invalidNumberValue' | undefined => {
@@ -188,7 +189,7 @@ export const getDurationsDiff = (durations1: DateDurationMap, durations2: DateDu
     return resultMap;
 };
 
-export const getValidDurations = (durationMap: DateDurationMap): DateDurationMap => {
+export const getValidDurations = (durationMap: DateDurationMap | InputDateDurationMap): DateDurationMap => {
     const cleanMap: DateDurationMap = {};
     Object.keys(durationMap).forEach((key) => {
         const duration = durationMap[key];
@@ -204,7 +205,7 @@ export const summarizeDateDurationMap = (durationMap: DateDurationMap): NumberDu
     return summarizeDurations(durations);
 };
 
-export const getDatesWithDurationLongerThanZero = (duration: DateDurationMap): ISODate[] =>
+export const getDatesWithDurationLongerThanZero = (duration: DateDurationMap | InputDateDurationMap): ISODate[] =>
     Object.keys(duration).filter((key) => {
         const d = duration[key];
         return isValidDuration(d) && durationIsZero(ensureDuration(d)) === false;
@@ -218,16 +219,16 @@ export const getDatesWithDurationLongerThanZero = (duration: DateDurationMap): I
  */
 export const getDurationsInDateRange = (
     dateDurationMap: DateDurationMap,
-    dateRange: DateRange,
-    removeInvalidDurations = true
+    dateRange: DateRange
+    // removeInvalidDurations = true
 ): DateDurationMap => {
     const returnMap: DateDurationMap = {};
     Object.keys(dateDurationMap).forEach((isoDate) => {
         const date = ISODateToDate(isoDate);
         if (date && isDateInDateRange(date, dateRange)) {
-            if (removeInvalidDurations && isValidDuration(dateDurationMap[isoDate]) === false) {
-                return;
-            }
+            // if (removeInvalidDurations && isValidDuration(dateDurationMap[isoDate]) === false) {
+            //     return;
+            // }
             returnMap[isoDate] = dateDurationMap[isoDate];
         }
         return false;

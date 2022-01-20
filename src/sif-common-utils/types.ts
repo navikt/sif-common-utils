@@ -40,4 +40,17 @@ export interface Duration {
     percentage?: number;
 }
 
-export type DateDurationMap = { [isoDate: ISODate]: Partial<Duration> };
+export type InputDateDurationMap = {
+    [isoDate: ISODate]: {
+        hours: string | undefined;
+        minutes: string | undefined;
+        percentage?: number;
+    };
+};
+export type DateDurationMap = {
+    [isoDate: ISODate]: {
+        hours: string;
+        minutes: string;
+        percentage?: number;
+    };
+};
