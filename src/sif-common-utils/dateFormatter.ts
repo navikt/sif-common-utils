@@ -13,28 +13,28 @@ export const dateFormatter = {
      * @param date: Date
      * @returns 01.01.2020
      */
-    compact: (date: Date) => dayjs(date).format(compactFormat),
+    compact: (date: Date) => dayjs.utc(date).format(compactFormat),
 
     /**
      *
      * @param date: Date
      * @returns 1. jan. 2021
      */
-    extended: (date: Date) => dayjs(date).format(extendedFormat),
+    extended: (date: Date) => dayjs.utc(date).format(extendedFormat),
 
     /**
      *
      * @param date: Date
      * @returns 1. januar 2021
      */
-    full: (date: Date) => dayjs(date).format(fullFormat),
+    full: (date: Date) => dayjs.utc(date).format(fullFormat),
 
     /**
      *
      * @param date: Date
      * @returns fredag
      */
-    dayName: (date: Date) => `${dayjs(date).format('dddd')}`,
+    dayName: (date: Date) => `${dayjs.utc(date).format('dddd')}`,
 
     /**
      *
@@ -62,12 +62,12 @@ export const dateFormatter = {
      * @param date: Date
      * @returns fredag 01. jan.
      */
-    dayDateAndMonth: (date: Date) => dayjs(date).format('dddd DD. MMM'),
+    dayDateAndMonth: (date: Date) => dayjs.utc(date).format('dddd DD. MMM'),
 
     /**
      *
      * @param date: Date
      * @returns fredag 01.01.21
      */
-    dayFullShortDate: (date: Date) => `${dayjs(date).format('dddd')} ${dayjs(date).format('DD.MM.YY')}`,
+    dayFullShortDate: (date: Date) => `${dayjs.utc(date).format('dddd')} ${dayjs.utc(date).format('DD.MM.YY')}`,
 };
