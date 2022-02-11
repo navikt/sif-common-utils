@@ -18,8 +18,6 @@ import {
 } from '..';
 
 describe('dateUtils', () => {
-    // const d = new Date();
-    // console.log({ d, dayjs: dayjs(d).toDate() });
     describe('ISODateToDate', () => {
         it('converts an iso-date formatted date to Date object', () => {
             const result = ISODateToDate('2021-01-01');
