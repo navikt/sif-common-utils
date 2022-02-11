@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import {
     isDateWeekDay,
     dateToISODate,
@@ -17,17 +18,23 @@ import {
 } from '..';
 
 describe('dateUtils', () => {
+    // const d = new Date();
+    // console.log({ d, dayjs: dayjs(d).toDate() });
     describe('ISODateToDate', () => {
-        it('converts an iso-date formatted date to Date object, utc', () => {
+        it('converts an iso-date formatted date to Date object', () => {
             const result = ISODateToDate('2021-01-01');
             expect(result.getFullYear()).toEqual(2021);
             expect(result.getMonth()).toEqual(0);
             expect(result.getDate()).toEqual(1);
         });
+        it('ISODateToDate returns non utc format', () => {
+            const result = ISODateToDate('2021-01-01');
+            expect(dayjs(result).isUTC()).toBeFalsy();
+        });
     });
     describe('dateToISODate', () => {
         it('converts a date to iso formatted date', () => {
-            const date: Date = new Date(Date.UTC(2021, 0, 1));
+            const date: Date = new Date(2021, 0, 1);
             const result = dateToISODate(date);
             expect(result).toEqual('2021-01-01');
         });

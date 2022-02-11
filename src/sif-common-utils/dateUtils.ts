@@ -9,12 +9,12 @@ dayjs.extend(isoWeek);
 
 const ISODateFormat = 'YYYY-MM-DD';
 
-export const dateToday = dayjs.utc().toDate();
+export const dateToday = new Date();
 
 export const dateToISODate = (date: Date): ISODate => dayjs(date).format(ISODateFormat);
 
 export const ISODateToDate = (isoDate: ISODate): Date => {
-    return dayjs.utc(isoDate, ISODateFormat).toDate();
+    return new Date(isoDate);
 };
 
 export const getISOWeekdayFromISODate = (isoDate: ISODate): number => {

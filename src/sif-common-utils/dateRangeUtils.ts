@@ -66,9 +66,9 @@ export const dateRangesCollide = (dateRanges: DateRange[], fromDateCanBeSameAsPr
         const hasOverlap = dateRanges.find((d, idx) => {
             if (idx < sortedDates.length - 1) {
                 if (fromDateCanBeSameAsPreviousToDate) {
-                    return dayjs(d.to).isAfter(sortedDates[idx + 1].from);
+                    return dayjs(d.to).isAfter(sortedDates[idx + 1].from, 'day');
                 } else {
-                    return dayjs(d.to).isSameOrAfter(sortedDates[idx + 1].from);
+                    return dayjs(d.to).isSameOrAfter(sortedDates[idx + 1].from, 'day');
                 }
             }
             return false;
@@ -212,7 +212,7 @@ export const getWeeksInDateRange = (dateRange: DateRange): DateRange[] => {
  */
 export const getDatesInDateRange = (dateRange: DateRange, onlyWeekDays = false): Date[] => {
     const dates: Date[] = [];
-    let current = dayjs(dateRange.from); //.subtract(dayjs(range.from).isoWeekday() - 1, 'days');
+    let current = dayjs(dateRange.from);
     do {
         const date = current.toDate();
         if (onlyWeekDays === false || isDateWeekDay(date)) {
