@@ -35,7 +35,7 @@ export const isDateRange = (dateRange: any): dateRange is DateRange => {
  */
 
 export const sortDateRange = (d1: DateRange, d2: DateRange): number => {
-    if (dayjs(d1.from).isSameOrBefore(d2.from, 'day')) {
+    if (dayjs.utc(d1.from).isSameOrBefore(d2.from, 'day')) {
         return -1;
     }
     return 1;
@@ -48,7 +48,7 @@ export const sortDateRange = (d1: DateRange, d2: DateRange): number => {
  * @returns sort value
  */
 export const sortDateRangeByToDate = (d1: DateRange, d2: DateRange): number => {
-    if (dayjs(d1.to).isSameOrBefore(d2.to, 'day')) {
+    if (dayjs.utc(d1.to).isSameOrBefore(d2.to, 'day')) {
         return -1;
     }
     return 1;
@@ -104,10 +104,10 @@ export const isDateInMaybeDateRange = (date: Date, dateRange: MaybeDateRange): b
         return isDateInDateRange(date, dateRange);
     }
     if (dateRange.from) {
-        return dayjs(date).isSameOrAfter(dateRange.from);
+        return dayjs.utc(date).isSameOrAfter(dateRange.from);
     }
     if (dateRange.to) {
-        return dayjs(date).isSameOrBefore(dateRange.to);
+        return dayjs.utc(date).isSameOrBefore(dateRange.to);
     }
     return false;
 };
@@ -120,7 +120,7 @@ export const isDateInMaybeDateRange = (date: Date, dateRange: MaybeDateRange): b
  */
 
 export const isDateInDateRange = (date: Date, dateRange: DateRange): boolean => {
-    return dayjs(date).isBetween(dateRange.from, dateRange.to, 'day', '[]');
+    return dayjs.utc(date).isBetween(dateRange.from, dateRange.to, 'day', '[]');
 };
 
 /**
@@ -130,7 +130,7 @@ export const isDateInDateRange = (date: Date, dateRange: DateRange): boolean => 
  * @returns boolean
  */
 export const isDateInsideDateRange = (date: Date, dateRange: DateRange): boolean => {
-    return dayjs(date).isBetween(dateRange.from, dateRange.to, 'day', '()');
+    return dayjs.utc(date).isBetween(dateRange.from, dateRange.to, 'day', '()');
 };
 
 /**
@@ -141,12 +141,14 @@ export const isDateInsideDateRange = (date: Date, dateRange: DateRange): boolean
  */
 export const getMonthsInDateRange = (dateRange: DateRange, returnFullMonths = false): DateRange[] => {
     const months: DateRange[] = [];
-    let current = dayjs(dateRange.from);
+    let current = dayjs.utc(dateRange.from);
     do {
         const from: Date = returnFullMonths ? current.startOf('month').toDate() : current.toDate();
-        const endOfMonth = dayjs(from).endOf('month').toDate();
+        const endOfMonth = dayjs.utc(from).endOf('month').toDate();
         const to =
-            dayjs(endOfMonth).isAfter(dateRange.to, 'day') && returnFullMonths === false ? dateRange.to : endOfMonth;
+            dayjs.utc(endOfMonth).isAfter(dateRange.to, 'day') && returnFullMonths === false
+                ? dateRange.to
+                : endOfMonth;
 
         months.push({ from, to });
         current = current.add(1, 'month').startOf('month');
@@ -161,8 +163,8 @@ export const getMonthsInDateRange = (dateRange: DateRange, returnFullMonths = fa
  * @returns DateRange
  */
 export const getMonthDateRange = (date: Date, onlyWeekDays = false): DateRange => ({
-    from: onlyWeekDays ? getFirstWeekDayInMonth(date) : dayjs(date).startOf('month').toDate(),
-    to: onlyWeekDays ? getLastWeekDayInMonth(date) : dayjs(date).endOf('month').toDate(),
+    from: onlyWeekDays ? getFirstWeekDayInMonth(date) : dayjs.utc(date).startOf('month').toDate(),
+    to: onlyWeekDays ? getLastWeekDayInMonth(date) : dayjs.utc(date).endOf('month').toDate(),
 });
 
 /**
@@ -174,8 +176,9 @@ export const getMonthDateRange = (date: Date, onlyWeekDays = false): DateRange =
 
 export const getWeekDateRange = (date: Date, onlyWeekDays = false): DateRange => {
     return {
-        from: dayjs(date).startOf('isoWeek').toDate(),
-        to: dayjs(date)
+        from: dayjs.utc(date).startOf('isoWeek').toDate(),
+        to: dayjs
+            .utc(date)
             .endOf('isoWeek')
             .subtract(onlyWeekDays ? 2 : 0, 'days')
             .toDate(),
@@ -189,7 +192,7 @@ export const getWeekDateRange = (date: Date, onlyWeekDays = false): DateRange =>
  */
 export const getWeeksInDateRange = (dateRange: DateRange): DateRange[] => {
     const weeks: DateRange[] = [];
-    let current = dayjs(dateRange.from);
+    let current = dayjs.utc(dateRange.from);
     do {
         const weekDateRange: DateRange = { from: current.toDate(), to: current.endOf('isoWeek').toDate() };
         const rangeToPush: DateRange = {
@@ -240,7 +243,7 @@ export const getYearsInDateRanges = (dateRanges: DateRange[]): number[] =>
 export const getNumberOfDaysInDateRange = (dateRange: DateRange, onlyWeekDays = false): number =>
     onlyWeekDays
         ? getDatesInDateRange(dateRange, onlyWeekDays).length
-        : Math.abs(dayjs(dateRange.to).diff(dateRange.from, 'days')) + 1;
+        : Math.abs(dayjs.utc(dateRange.to).diff(dateRange.from, 'days')) + 1;
 
 /**
  * Gets a dateRange spanning all @ranges
@@ -249,8 +252,8 @@ export const getNumberOfDaysInDateRange = (dateRange: DateRange, onlyWeekDays = 
  */
 export const getDateRangeFromDateRanges = (dateRanges: DateRange[]): DateRange => {
     return {
-        from: dayjs.min(dateRanges.map((range) => dayjs(range.from))).toDate(),
-        to: dayjs.max(dateRanges.map((range) => dayjs(range.to))).toDate(),
+        from: dayjs.min(dateRanges.map((range) => dayjs.utc(range.from))).toDate(),
+        to: dayjs.max(dateRanges.map((range) => dayjs.utc(range.to))).toDate(),
     };
 };
 
@@ -266,13 +269,14 @@ export const getDateRangesBetweenDateRanges = (dateRanges: DateRange[]): DateRan
             return;
         }
         const rangeInBetween: DateRange = {
-            from: dayjs(dateRanges[index - 1].to)
+            from: dayjs
+                .utc(dateRanges[index - 1].to)
                 .add(1, 'day')
                 .toDate(),
-            to: dayjs(periode.from).subtract(1, 'day').toDate(),
+            to: dayjs.utc(periode.from).subtract(1, 'day').toDate(),
         };
 
-        if (dayjs(rangeInBetween.from).isSameOrBefore(rangeInBetween.to, 'day')) {
+        if (dayjs.utc(rangeInBetween.from).isSameOrBefore(rangeInBetween.to, 'day')) {
             rangesInBetween.push(rangeInBetween);
         }
     });
@@ -289,18 +293,18 @@ export const getDatesInMonthOutsideDateRange = (month: Date, dateRange: DateRang
     const monthDateRange: DateRange = getMonthDateRange(month);
     const dates: Date[] = [];
 
-    if (dayjs(dateRange.from).isAfter(monthDateRange.from, 'day')) {
+    if (dayjs.utc(dateRange.from).isAfter(monthDateRange.from, 'day')) {
         dates.push(
             ...getDatesInDateRange({
                 from: monthDateRange.from,
-                to: dayjs(dateRange.from).subtract(1, 'day').toDate(),
+                to: dayjs.utc(dateRange.from).subtract(1, 'day').toDate(),
             })
         );
     }
-    if (dayjs(dateRange.to).isBefore(monthDateRange.to, 'day')) {
+    if (dayjs.utc(dateRange.to).isBefore(monthDateRange.to, 'day')) {
         dates.push(
             ...getDatesInDateRange({
-                from: dayjs(dateRange.to).add(1, 'day').toDate(),
+                from: dayjs.utc(dateRange.to).add(1, 'day').toDate(),
                 to: monthDateRange.to,
             })
         );
