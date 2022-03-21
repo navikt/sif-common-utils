@@ -1,4 +1,6 @@
 import { NumberDuration, DurationWeekdays, summarizeDurations, Duration } from '.';
+import { durationToISODuration } from './durationUtils';
+import { ISODurationWeekdays } from './types';
 
 export const summarizeDurationInDurationWeekdays = (weekdays: DurationWeekdays): NumberDuration => {
     return summarizeDurations([
@@ -24,4 +26,20 @@ export const getDurationForISOWeekday = (durationWeekdays: DurationWeekdays, wee
             return durationWeekdays.friday;
     }
     return undefined;
+};
+
+export const durationWeekdaysToISODurationWeekdays = ({
+    monday,
+    tuesday,
+    wednesday,
+    thursday,
+    friday,
+}: DurationWeekdays): ISODurationWeekdays => {
+    return {
+        monday: monday ? durationToISODuration(monday) : undefined,
+        tuesday: tuesday ? durationToISODuration(tuesday) : undefined,
+        wednesday: wednesday ? durationToISODuration(wednesday) : undefined,
+        thursday: thursday ? durationToISODuration(thursday) : undefined,
+        friday: friday ? durationToISODuration(friday) : undefined,
+    };
 };

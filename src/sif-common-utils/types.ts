@@ -34,6 +34,14 @@ export type DurationWeekdays = {
     [Weekday.friday]?: Duration;
 };
 
+export interface ISODurationWeekdays {
+    [Weekday.monday]?: ISODuration;
+    [Weekday.tuesday]?: ISODuration;
+    [Weekday.wednesday]?: ISODuration;
+    [Weekday.thursday]?: ISODuration;
+    [Weekday.friday]?: ISODuration;
+}
+
 export interface Duration {
     hours: string;
     minutes: string;
