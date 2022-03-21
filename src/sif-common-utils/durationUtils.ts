@@ -122,6 +122,29 @@ export const ISODurationToDuration = (duration: string): Duration | undefined =>
     }
 };
 
+export const ISODurationToDecimalDuration = (isoDuration: string): number | undefined => {
+    const duration = ISODurationToDuration(isoDuration);
+    return duration ? durationToDecimalDuration(duration) : undefined;
+};
+
+export const getPercentageOfDecimalDuration = (duration: number, percentage: number): number => {
+    return (duration / 100) * percentage;
+};
+
+export const getPercentageOfISODuration = (isoDuration: ISODuration, percentage: number): ISODuration | undefined => {
+    const decimalDuration = ISODurationToDecimalDuration(isoDuration);
+    if (decimalDuration) {
+        return decimalDurationToISODuration(getPercentageOfDecimalDuration(decimalDuration, percentage));
+    }
+    return undefined;
+};
+
+export const getPercentageOfDuration = (isoDuration: Duration, percentage: number): Duration => {
+    return decimalDurationToDuration(
+        getPercentageOfDecimalDuration(durationToDecimalDuration(isoDuration), percentage)
+    );
+};
+
 export const decimalDurationToNumberDuration = (duration: number): NumberDuration => {
     const hours = Math.floor(duration);
     const minutes = Math.round(60 * (duration % 1));
@@ -140,6 +163,10 @@ export const decimalDurationToDuration = (duration: number): Duration => {
             minutes,
         })
     );
+};
+
+export const decimalDurationToISODuration = (duraction: number): ISODuration => {
+    return durationToISODuration(decimalDurationToDuration(duraction));
 };
 
 export const durationToDecimalDuration = (duration: NumberDuration | Partial<Duration>): number => {
@@ -257,6 +284,7 @@ export const getDateDurationDiff = (durations1: DateDurationMap, durations2: Dat
 export const durationUtils = {
     decimalDurationToDuration,
     decimalDurationToNumberDuration,
+    decimalDurationToISODuration,
     durationAsNumberDuration,
     durationIsZero,
     durationsAreEqual,
@@ -268,9 +296,13 @@ export const durationUtils = {
     getDatesWithDurationLongerThanZero,
     getDurationsDiff,
     getDurationsInDateRange,
+    getPercentageOfISODuration,
+    getPercentageOfDuration,
+    getPercentageOfDecimalDuration,
     getValidDurations,
     ISODurationToDuration,
     ISODurationToNumberDuration,
+    ISODurationToDecimalDuration,
     isValidDuration,
     numberDurationAsDuration,
     summarizeDateDurationMap,

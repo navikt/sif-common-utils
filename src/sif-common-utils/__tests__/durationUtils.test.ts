@@ -21,6 +21,9 @@ import {
     getDatesWithDurationLongerThanZero,
     getDurationsDiff,
     getDurationsInDateRange,
+    getPercentageOfDecimalDuration,
+    getPercentageOfDuration,
+    getPercentageOfISODuration,
     getValidDurations,
     summarizeDateDurationMap,
     summarizeDurations,
@@ -470,6 +473,34 @@ describe('durationUtils', () => {
             expect(Object.keys(result).length).toBe(2);
             expect(result['2021-01-02']).toBeDefined();
             expect(result['2021-01-03']).toBeDefined();
+        });
+    });
+    describe('getPercentageOfISODuration', () => {
+        it('keeps 100% of 1 hour 30 minutes the same', () => {
+            expect(getPercentageOfISODuration('PT1H30M', 100)).toEqual('PT1H30M');
+        });
+        it('returns half 45 minutes when calculating 50% of 1 hour 30 minutes', () => {
+            expect(getPercentageOfISODuration('PT1H30M', 50)).toEqual('PT0H45M');
+        });
+    });
+    describe('getPercentageOfISODuration', () => {
+        it('keeps 100% of 1 hour 30 minutes the same', () => {
+            const { hours, minutes } = getPercentageOfDuration({ hours: '1', minutes: '30' }, 100);
+            expect(hours).toEqual('1');
+            expect(minutes).toEqual('30');
+        });
+        it('returns half 45 minutes when calculating 50% of 1 hour 30 minutes', () => {
+            const { hours, minutes } = getPercentageOfDuration({ hours: '1', minutes: '30' }, 50);
+            expect(hours).toEqual('0');
+            expect(minutes).toEqual('45');
+        });
+    });
+    describe('getPercentageOfDecimalDuration', () => {
+        it('keeps 100% of 1 hour 30 minutes the same', () => {
+            expect(getPercentageOfDecimalDuration(1.5, 100)).toEqual(1.5);
+        });
+        it('returns 0.75 hours when calculating 50% of 1 hour 30 minutes', () => {
+            expect(getPercentageOfDecimalDuration(1.5, 50)).toEqual(0.75);
         });
     });
 });
