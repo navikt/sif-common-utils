@@ -53,7 +53,7 @@
         "web-vitals": "^2.1.4"
     },
     "peerDependencies": {
-        "dayjs": "1.10.x"
+        "dayjs": "1.x"
     },
     "scripts": {
         "test": "jest  --config ./jest/jest.config.js --watch",
