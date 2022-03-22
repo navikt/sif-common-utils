@@ -87,27 +87,29 @@ export const durationsAreEqual = (
 export const summarizeDurations = (
     durations: Array<Partial<Duration> | NumberDuration | undefined>
 ): NumberDuration => {
-    let hours = 0;
     let minutes = 0;
     durations.forEach((duration) => {
         if (duration) {
             const dur = ensureNumberDuration(duration);
-            hours += dur.hours;
-            minutes += dur.minutes;
+            minutes += dur.hours * 60 + dur.minutes;
         }
     });
     return {
-        hours,
-        minutes,
+        hours: Math.floor(minutes / 60),
+        minutes: minutes % 60,
     };
 };
 
-export const ISODurationToNumberDuration = (duration: string): NumberDuration => {
-    const parts = parse(duration);
-    return {
-        hours: parts.hours || 0,
-        minutes: parts.minutes || 0,
-    };
+export const ISODurationToNumberDuration = (duration: string): NumberDuration | undefined => {
+    try {
+        const parts = parse(duration);
+        return {
+            hours: parts.hours || 0,
+            minutes: parts.minutes || 0,
+        };
+    } catch (e) {
+        return undefined;
+    }
 };
 
 export const ISODurationToDuration = (duration: string): Duration | undefined => {
@@ -127,8 +129,8 @@ export const ISODurationToDecimalDuration = (isoDuration: string): number | unde
     return duration ? durationToDecimalDuration(duration) : undefined;
 };
 
-export const getPercentageOfDecimalDuration = (duration: number, percentage: number): number => {
-    return (duration / 100) * percentage;
+export const getPercentageOfDecimalDuration = (decimalDuration: number, percentage: number): number => {
+    return (decimalDuration / 100) * percentage;
 };
 
 export const getPercentageOfISODuration = (isoDuration: ISODuration, percentage: number): ISODuration | undefined => {
@@ -139,10 +141,8 @@ export const getPercentageOfISODuration = (isoDuration: ISODuration, percentage:
     return undefined;
 };
 
-export const getPercentageOfDuration = (isoDuration: Duration, percentage: number): Duration => {
-    return decimalDurationToDuration(
-        getPercentageOfDecimalDuration(durationToDecimalDuration(isoDuration), percentage)
-    );
+export const getPercentageOfDuration = (duration: Duration, percentage: number): Duration => {
+    return decimalDurationToDuration(getPercentageOfDecimalDuration(durationToDecimalDuration(duration), percentage));
 };
 
 export const decimalDurationToNumberDuration = (duration: number): NumberDuration => {

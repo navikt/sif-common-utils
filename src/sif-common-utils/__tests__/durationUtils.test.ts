@@ -13,7 +13,6 @@ import {
     ISODurationToDuration,
     ISODurationToNumberDuration,
     isValidDuration,
-    NumberDuration,
 } from '../';
 import { ISODateToDate } from '../dateUtils';
 import {
@@ -25,6 +24,7 @@ import {
     getPercentageOfDuration,
     getPercentageOfISODuration,
     getValidDurations,
+    ISODurationToDecimalDuration,
     summarizeDateDurationMap,
     summarizeDurations,
 } from '../durationUtils';
@@ -99,6 +99,10 @@ describe('durationUtils', () => {
             const result = ISODurationToNumberDuration('PT10H65M');
             expect(result?.hours).toEqual(10);
             expect(result?.minutes).toEqual(65);
+        });
+        it('returns undefined when isoduration is invalid', () => {
+            const result = ISODurationToNumberDuration('XYZ');
+            expect(result).toBeUndefined();
         });
     });
     describe('durationToDecimalDuration', () => {
@@ -272,9 +276,9 @@ describe('durationUtils', () => {
         });
     });
     describe('summarizeDurations', () => {
-        const dur1: NumberDuration = ISODurationToNumberDuration('PT2H0M');
-        const dur2: NumberDuration = ISODurationToNumberDuration('PT2H0M');
-        const dur3: NumberDuration = ISODurationToNumberDuration('PT3H1M');
+        const dur1 = ISODurationToNumberDuration('PT2H0M');
+        const dur2 = ISODurationToNumberDuration('PT2H0M');
+        const dur3 = ISODurationToNumberDuration('PT3H1M');
         it('sums durations in array correctly when all durations are valid', () => {
             const result = summarizeDurations([dur1, dur2, dur3]);
             expect(result.hours).toBe(7);
@@ -290,11 +294,36 @@ describe('durationUtils', () => {
             expect(result.hours).toBe(7);
             expect(result.minutes).toBe(1);
         });
+        it('sums durations in array correctly when minutes sums to 60', () => {
+            const result = summarizeDurations([
+                { hours: '1', minutes: '30' },
+                { hours: '1', minutes: '30' },
+            ]);
+            expect(result.hours).toBe(3);
+            expect(result.minutes).toBe(0);
+        });
+        it('sums durations in array correctly when minutes sums to 65', () => {
+            const result = summarizeDurations([
+                { hours: '1', minutes: '30' },
+                { hours: '1', minutes: '35' },
+            ]);
+            expect(result.hours).toBe(3);
+            expect(result.minutes).toBe(5);
+        });
+        it('sums durations in array correctly when minutes sums to 125', () => {
+            const result = summarizeDurations([
+                { hours: '0', minutes: '50' },
+                { hours: '0', minutes: '50' },
+                { hours: '0', minutes: '25' },
+            ]);
+            expect(result.hours).toBe(2);
+            expect(result.minutes).toBe(5);
+        });
     });
     describe('durationsAreEqual', () => {
-        const dur1: NumberDuration = ISODurationToNumberDuration('PT2H0M');
-        const dur2: NumberDuration = ISODurationToNumberDuration('PT2H0M');
-        const dur3: NumberDuration = ISODurationToNumberDuration('PT3H0M');
+        const dur1 = ISODurationToNumberDuration('PT2H0M');
+        const dur2 = ISODurationToNumberDuration('PT2H0M');
+        const dur3 = ISODurationToNumberDuration('PT3H0M');
 
         it('returns true if both are undefined', () => {
             expect(durationsAreEqual(undefined, undefined)).toBeTruthy();
@@ -475,12 +504,23 @@ describe('durationUtils', () => {
             expect(result['2021-01-03']).toBeDefined();
         });
     });
+    describe('ISODurationToDecimalDuration', () => {
+        it('converts ISODuration to decimal duration', () => {
+            expect(ISODurationToDecimalDuration('PT1H30M')).toEqual(1.5);
+        });
+        it('returns undefined if ISODuration is not valid', () => {
+            expect(ISODurationToDecimalDuration('ABC')).toBeUndefined();
+        });
+    });
     describe('getPercentageOfISODuration', () => {
         it('keeps 100% of 1 hour 30 minutes the same', () => {
             expect(getPercentageOfISODuration('PT1H30M', 100)).toEqual('PT1H30M');
         });
         it('returns half 45 minutes when calculating 50% of 1 hour 30 minutes', () => {
             expect(getPercentageOfISODuration('PT1H30M', 50)).toEqual('PT0H45M');
+        });
+        it('returns undefined if ISODuration is not valid ISODuration', () => {
+            expect(getPercentageOfISODuration('P1XH30M', 50)).toBeUndefined();
         });
     });
     describe('getPercentageOfISODuration', () => {
