@@ -16,6 +16,7 @@ import {
 } from '../';
 import { ISODateToDate } from '../dateUtils';
 import {
+    durationIsGreatherThanZero,
     getDateDurationDiff,
     getDatesWithDurationLongerThanZero,
     getDurationsDiff,
@@ -541,6 +542,17 @@ describe('durationUtils', () => {
         });
         it('returns 0.75 hours when calculating 50% of 1 hour 30 minutes', () => {
             expect(getPercentageOfDecimalDuration(1.5, 50)).toEqual(0.75);
+        });
+    });
+    describe('durationIsGreatherThanZero', () => {
+        it('returnerer true når duration er over 0 minutter', () => {
+            expect(durationIsGreatherThanZero({ hours: '0', minutes: '1' })).toBeTruthy();
+        });
+        it('returnerer false når duration er undefined', () => {
+            expect(durationIsGreatherThanZero(undefined)).toBeFalsy();
+        });
+        it('returnerer false når duration er 0 minutter', () => {
+            expect(durationIsGreatherThanZero({ hours: '0', minutes: '0' })).toBeFalsy();
         });
     });
 });
