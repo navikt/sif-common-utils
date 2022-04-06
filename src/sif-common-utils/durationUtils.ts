@@ -281,6 +281,21 @@ export const getDateDurationDiff = (durations1: DateDurationMap, durations2: Dat
     return resultMap;
 };
 
+export const durationIsGreatherThanZero = (duration: Duration | undefined): boolean => {
+    if (!duration) {
+        return false;
+    }
+    const dur = durationToDecimalDuration(duration);
+    return dur > 0;
+};
+
+export const getNumberDurationOrUndefined = (duration?: Duration): NumberDuration | undefined => {
+    if (duration && durationIsGreatherThanZero(duration)) {
+        return durationAsNumberDuration(duration);
+    }
+    return undefined;
+};
+
 export const durationUtils = {
     decimalDurationToDuration,
     decimalDurationToNumberDuration,
@@ -290,12 +305,14 @@ export const durationUtils = {
     durationsAreEqual,
     durationToDecimalDuration,
     durationToISODuration,
+    durationIsGreatherThanZero,
     ensureDuration,
     ensureNumberDuration,
     getDateDurationDiff,
     getDatesWithDurationLongerThanZero,
     getDurationsDiff,
     getDurationsInDateRange,
+    getNumberDurationOrUndefined,
     getPercentageOfISODuration,
     getPercentageOfDuration,
     getPercentageOfDecimalDuration,
