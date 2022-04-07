@@ -4,6 +4,7 @@ import {
     durationIsGreatherThanZero,
     durationToDecimalDuration,
     durationToISODuration,
+    getNumberDurationOrUndefined,
     getPercentageOfDuration,
 } from './durationUtils';
 import { ISODurationWeekdays, Weekday } from './types';
@@ -18,7 +19,10 @@ export const summarizeDurationInDurationWeekdays = (weekdays: DurationWeekdays):
     ]);
 };
 
-export const getDurationForISOWeekday = (durationWeekdays: DurationWeekdays, weekday: number): Duration | undefined => {
+export const getDurationForISOWeekdayNumber = (
+    durationWeekdays: DurationWeekdays,
+    weekday: number
+): Duration | undefined => {
     switch (weekday) {
         case 1:
             return durationWeekdays.monday;
@@ -32,6 +36,26 @@ export const getDurationForISOWeekday = (durationWeekdays: DurationWeekdays, wee
             return durationWeekdays.friday;
     }
     return undefined;
+};
+
+export const getNumberDurationForWeekday = (
+    fasteDager: DurationWeekdays,
+    weekday: Weekday
+): NumberDuration | undefined => {
+    switch (weekday) {
+        case 'monday':
+            return getNumberDurationOrUndefined(fasteDager.monday);
+        case 'tuesday':
+            return getNumberDurationOrUndefined(fasteDager.tuesday);
+        case 'wednesday':
+            return getNumberDurationOrUndefined(fasteDager.wednesday);
+        case 'thursday':
+            return getNumberDurationOrUndefined(fasteDager.thursday);
+        case 'friday':
+            return getNumberDurationOrUndefined(fasteDager.friday);
+        default:
+            return undefined;
+    }
 };
 
 export const durationWeekdaysToISODurationWeekdays = ({

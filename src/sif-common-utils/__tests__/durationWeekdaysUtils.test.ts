@@ -1,4 +1,4 @@
-import { DurationWeekdays, getDurationForISOWeekday } from '..';
+import { DurationWeekdays, getDurationForISOWeekdayNumber } from '..';
 import {
     getAllWeekdaysWithoutDuration,
     getWeekdaysWithDuration,
@@ -43,7 +43,7 @@ describe('workDurationUtils', () => {
             expect(sum.minutes).toBe(30);
         });
     });
-    describe('getDurationForISOWeekday', () => {
+    describe('getDurationForISOWeekdayNumber', () => {
         const durations: DurationWeekdays = {
             monday: { hours: '1', minutes: '0' },
             tuesday: { hours: '2', minutes: '0' },
@@ -52,31 +52,31 @@ describe('workDurationUtils', () => {
             friday: { hours: '5', minutes: '0' },
         };
         it('returns correctly for monday', () => {
-            const result = getDurationForISOWeekday(durations, 1);
+            const result = getDurationForISOWeekdayNumber(durations, 1);
             expect(result).toBeDefined();
             expect(result?.hours).toEqual('1');
             expect(result?.minutes).toEqual('0');
         });
         it('returns correctly for tuesday', () => {
-            const result = getDurationForISOWeekday(durations, 2);
+            const result = getDurationForISOWeekdayNumber(durations, 2);
             expect(result).toBeDefined();
             expect(result?.hours).toEqual('2');
             expect(result?.minutes).toEqual('0');
         });
         it('returns correctly for wednesday', () => {
-            const result = getDurationForISOWeekday(durations, 3);
+            const result = getDurationForISOWeekdayNumber(durations, 3);
             expect(result).toBeDefined();
             expect(result?.hours).toEqual('3');
             expect(result?.minutes).toEqual('0');
         });
         it('returns correctly for thursday', () => {
-            const result = getDurationForISOWeekday(durations, 4);
+            const result = getDurationForISOWeekdayNumber(durations, 4);
             expect(result).toBeDefined();
             expect(result?.hours).toEqual('4');
             expect(result?.minutes).toEqual('0');
         });
         it('returns correctly for friday', () => {
-            const result = getDurationForISOWeekday(durations, 5);
+            const result = getDurationForISOWeekdayNumber(durations, 5);
             expect(result).toBeDefined();
             expect(result?.hours).toEqual('5');
             expect(result?.minutes).toEqual('0');
