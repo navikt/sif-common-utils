@@ -1,3 +1,4 @@
+import exp from 'constants';
 import {
     durationAsNumberDuration,
     decimalDurationToDuration,
@@ -21,11 +22,13 @@ import {
     getDatesWithDurationLongerThanZero,
     getDurationsDiff,
     getDurationsInDateRange,
+    getNumberDurationOrUndefined,
     getPercentageOfDecimalDuration,
     getPercentageOfDuration,
     getPercentageOfISODuration,
     getValidDurations,
     ISODurationToDecimalDuration,
+    removeDatesFromDateDurationMap,
     summarizeDateDurationMap,
     summarizeDurations,
 } from '../durationUtils';
@@ -553,6 +556,51 @@ describe('durationUtils', () => {
         });
         it('returnerer false når duration er 0 minutter', () => {
             expect(durationIsGreatherThanZero({ hours: '0', minutes: '0' })).toBeFalsy();
+        });
+    });
+    describe('removeDatesFromDateDurationMap', () => {
+        const keyDateBefore = '2020-01-02';
+        const keyDate1 = '2020-01-03';
+        const keyDate2 = '2020-01-04';
+        const keyDate3 = '2020-01-05';
+        const keyDateAfter = '2020-01-06';
+        const dateMap: DateDurationMap = {
+            [keyDate1]: { hours: '1', minutes: '0' },
+            [keyDate2]: { hours: '1', minutes: '0' },
+            [keyDate3]: { hours: '1', minutes: '0' },
+        };
+        it('keeps all dates if array of dates to be removed is empty', () => {
+            const result = removeDatesFromDateDurationMap(dateMap, []);
+            expect(Object.keys(result).length).toBe(3);
+            expect(result[keyDate1]).toBeDefined();
+            expect(result[keyDate2]).toBeDefined();
+            expect(result[keyDate3]).toBeDefined();
+        });
+        it('keeps dates which are in array of dates to be removed', () => {
+            const result = removeDatesFromDateDurationMap(dateMap, [ISODateToDate(keyDate1)]);
+            expect(Object.keys(result).length).toBe(2);
+            expect(result[keyDate1]).toBeUndefined();
+            expect(result[keyDate2]).toBeDefined();
+            expect(result[keyDate3]).toBeDefined();
+        });
+        it('keeps all dates id removeDates is only other dates', () => {
+            const result = removeDatesFromDateDurationMap(dateMap, [
+                ISODateToDate(keyDateBefore),
+                ISODateToDate(keyDateAfter),
+            ]);
+            expect(Object.keys(result).length).toBe(3);
+            expect(result[keyDate1]).toBeDefined();
+            expect(result[keyDate2]).toBeDefined();
+            expect(result[keyDate3]).toBeDefined();
+        });
+    });
+    describe('getNumberDurationOrUndefined', () => {
+        it('returns undefined if duration is not valid', () => {
+            expect(getNumberDurationOrUndefined()).toBeUndefined();
+            expect(getNumberDurationOrUndefined({ hours: 'a', minutes: 'b' })).toBeUndefined();
+        });
+        it('returns duration if duration is valid', () => {
+            expect(getNumberDurationOrUndefined({ hours: '1', minutes: '0' })).toBeDefined();
         });
     });
 });

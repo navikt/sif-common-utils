@@ -11,6 +11,7 @@ import {
     ISODate,
     InputDateDurationMap,
 } from '.';
+import { isDateInDates } from './dateUtils';
 
 export const getPositiveNumberValue = (value: any): number | 'invalidNumberValue' | undefined => {
     if (typeof value === 'number' && value >= 0) {
@@ -261,6 +262,21 @@ export const getDurationsInDateRange = (
         return false;
     });
     return returnMap;
+};
+
+/** Remove dates from a dateDurationMap */
+export const removeDatesFromDateDurationMap = (
+    dateDurationMap: DateDurationMap,
+    datesToRemove: Date[]
+): DateDurationMap => {
+    const cleanedMap: DateDurationMap = {};
+    Object.keys(dateDurationMap).forEach((key) => {
+        const date = ISODateToDate(key);
+        if (date && isDateInDates(date, datesToRemove) === false) {
+            cleanedMap[key] = dateDurationMap[key];
+        }
+    });
+    return cleanedMap;
 };
 
 /**
