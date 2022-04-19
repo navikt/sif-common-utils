@@ -7,27 +7,27 @@ describe('dateFormatter', () => {
         expect(dateFormatter.compact(date)).toEqual('01.01.2021');
     });
     it('formats extended', () => {
-        expect(dateFormatter.extended(date)).toEqual('1. jan. 2021');
+        expect(dateFormatter.dateShortMonthYear(date)).toEqual('1. jan. 2021');
     });
     it('formats full date', () => {
         expect(dateFormatter.full(date)).toEqual('1. januar 2021');
     });
     it('formats name of day', () => {
-        expect(dateFormatter.dayName(date)).toEqual('fredag');
+        expect(dateFormatter.day(date)).toEqual('fredag');
     });
     it('formats compact with day name', () => {
-        expect(dateFormatter.compactWithDayName(date)).toEqual('fredag 01.01.2021');
+        expect(dateFormatter.dayCompactDate(date)).toEqual('fredag 01.01.2021');
     });
     it('formats extended with day name', () => {
-        expect(dateFormatter.extendedWithDayName(date)).toEqual('fredag 1. jan. 2021');
+        expect(dateFormatter.dayDateShortMonthYear(date)).toEqual('fredag 1. jan. 2021');
     });
     it('formats full with day name', () => {
-        expect(dateFormatter.fullWithDayName(date)).toEqual('fredag 1. januar 2021');
+        expect(dateFormatter.dayDateMonthYear(date)).toEqual('fredag 1. januar 2021');
     });
     it('formats dayDateAndMonth', () => {
-        expect(dateFormatter.dayDateAndMonth(date)).toEqual('fredag 01. jan.');
+        expect(dateFormatter.dayDateMonth(date)).toEqual('fredag 1. januar');
     });
-    it('formats dayFullShortDate', () => {
-        expect(dateFormatter.dayFullShortDate(date)).toEqual('fredag 01.01.21');
+    it('formats dayDateAndShortMonth', () => {
+        expect(dateFormatter.dayDateShortMonth(date)).toEqual('fredag 1. jan.');
     });
 });

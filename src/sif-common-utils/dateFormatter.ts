@@ -4,8 +4,6 @@ require('dayjs/locale/nb');
 dayjs.locale('nb');
 
 const compactFormat = 'DD.MM.YYYY';
-const extendedFormat = 'D. MMM YYYY';
-const fullFormat = 'D. MMMM YYYY';
 
 export const dateFormatter = {
     /**
@@ -20,54 +18,54 @@ export const dateFormatter = {
      * @param date: Date
      * @returns 1. jan. 2021
      */
-    extended: (date: Date) => dayjs(date).format(extendedFormat),
+    dateShortMonthYear: (date: Date) => dayjs(date).format('D. MMM YYYY'),
 
     /**
      *
      * @param date: Date
      * @returns 1. januar 2021
      */
-    full: (date: Date) => dayjs(date).format(fullFormat),
+    full: (date: Date) => dayjs(date).format('D. MMMM YYYY'),
 
     /**
      *
      * @param date: Date
      * @returns fredag
      */
-    dayName: (date: Date) => `${dayjs(date).format('dddd')}`,
+    day: (date: Date) => `${dayjs(date).format('dddd')}`,
 
     /**
      *
      * @param date: Date
      * @returns fredag 01.01.2021
      */
-    compactWithDayName: (date: Date) => `${dateFormatter.dayName(date)} ${dateFormatter.compact(date)}`,
+    dayCompactDate: (date: Date) => `${dateFormatter.day(date)} ${dateFormatter.compact(date)}`,
 
     /**
      *
      * @param date: Date
      * @returns fredag 1. jan. 2021
      */
-    extendedWithDayName: (date: Date) => `${dateFormatter.dayName(date)} ${dateFormatter.extended(date)}`,
+    dayDateShortMonthYear: (date: Date) => `${dateFormatter.day(date)} ${dateFormatter.dateShortMonthYear(date)}`,
 
     /**
      *
      * @param date: Date
      * @returnsfredag 1. januar 2021
      */
-    fullWithDayName: (date: Date) => `${dateFormatter.dayName(date)} ${dateFormatter.full(date)}`,
+    dayDateMonthYear: (date: Date) => `${dateFormatter.day(date)} ${dateFormatter.full(date)}`,
 
     /**
      *
      * @param date: Date
-     * @returns fredag 01. jan.
+     * @returns fredag 1. jan.
      */
-    dayDateAndMonth: (date: Date) => dayjs(date).format('dddd DD. MMM'),
+    dayDateMonth: (date: Date) => dayjs(date).format('dddd D. MMMM'),
 
     /**
      *
      * @param date: Date
-     * @returns fredag 01.01.21
+     * @returns fredag 1. januar
      */
-    dayFullShortDate: (date: Date) => `${dayjs(date).format('dddd')} ${dayjs(date).format('DD.MM.YY')}`,
+    dayDateShortMonth: (date: Date) => dayjs(date).format('dddd D. MMM'),
 };
