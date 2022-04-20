@@ -11,7 +11,7 @@ import {
     ensureDuration,
     ensureNumberDuration,
     getPositiveNumberValue,
-    ISODurationToDuration,
+    ISODurationToMaybeDuration,
     ISODurationToNumberDuration,
     isValidDuration,
 } from '../';
@@ -88,7 +88,7 @@ describe('durationUtils', () => {
             expect(durationToISODuration({ hours: '1' })).toEqual('PT1H0M');
         });
     });
-    describe('ISODurationToDuration', () => {
+    describe('ISODurationToNumberDuration', () => {
         it('converts PT0H0M correctly', () => {
             const result = ISODurationToNumberDuration('PT0H0M');
             expect(result?.hours).toEqual(0);
@@ -172,15 +172,15 @@ describe('durationUtils', () => {
     });
     describe('ISODurationToDateDuration', () => {
         it('returns undefined if duration is invalid', () => {
-            expect(ISODurationToDuration('TABC')).toBeFalsy();
+            expect(ISODurationToMaybeDuration('TABC')).toBeFalsy();
         });
         it('returns correct input duration when duration is valid', () => {
-            expect(ISODurationToDuration('PT1H')?.hours).toEqual('1');
-            expect(ISODurationToDuration('PT1M')?.minutes).toEqual('1');
+            expect(ISODurationToMaybeDuration('PT1H')?.hours).toEqual('1');
+            expect(ISODurationToMaybeDuration('PT1M')?.minutes).toEqual('1');
         });
         it('returns 0 hours and 0 minutes when duration is valid, but hours and minutes not set', () => {
-            expect(ISODurationToDuration('PT')?.hours).toEqual('0');
-            expect(ISODurationToDuration('PT')?.minutes).toEqual('0');
+            expect(ISODurationToMaybeDuration('PT')?.hours).toEqual('0');
+            expect(ISODurationToMaybeDuration('PT')?.minutes).toEqual('0');
         });
     });
     describe('isValidDuration', () => {

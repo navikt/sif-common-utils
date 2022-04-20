@@ -113,20 +113,24 @@ export const ISODurationToNumberDuration = (duration: string): NumberDuration | 
     }
 };
 
-export const ISODurationToDuration = (duration: string): Duration | undefined => {
+export const ISODurationToMaybeDuration = (duration: string): Duration | undefined => {
     try {
-        const parts = parse(duration);
-        return {
-            hours: `${parts.hours}`,
-            minutes: `${parts.minutes}`,
-        };
+        return ISODurationToDuration(duration);
     } catch (e) {
         return undefined;
     }
 };
 
+export const ISODurationToDuration = (validDuration: string): Duration | undefined => {
+    const parts = parse(validDuration);
+    return {
+        hours: `${parts.hours}`,
+        minutes: `${parts.minutes}`,
+    };
+};
+
 export const ISODurationToDecimalDuration = (isoDuration: string): number | undefined => {
-    const duration = ISODurationToDuration(isoDuration);
+    const duration = ISODurationToMaybeDuration(isoDuration);
     return duration ? durationToDecimalDuration(duration) : undefined;
 };
 
@@ -333,7 +337,7 @@ export const durationUtils = {
     getPercentageOfDuration,
     getPercentageOfDecimalDuration,
     getValidDurations,
-    ISODurationToDuration,
+    ISODurationToDuration: ISODurationToMaybeDuration,
     ISODurationToNumberDuration,
     ISODurationToDecimalDuration,
     isValidDuration,
