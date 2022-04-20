@@ -121,7 +121,7 @@ export const ISODurationToMaybeDuration = (duration: string): Duration | undefin
     }
 };
 
-export const ISODurationToDuration = (validDuration: string): Duration | undefined => {
+export const ISODurationToDuration = (validDuration: string): Duration => {
     const parts = parse(validDuration);
     return {
         hours: `${parts.hours}`,
