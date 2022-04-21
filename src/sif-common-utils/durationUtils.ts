@@ -11,7 +11,7 @@ import {
     ISODate,
     InputDateDurationMap,
 } from '.';
-import { isDateInDates } from './dateUtils';
+import { isDateInDates, sortDateArray } from './dateUtils';
 
 export const getPositiveNumberValue = (value: any): number | 'invalidNumberValue' | undefined => {
     if (typeof value === 'number' && value >= 0) {
@@ -249,18 +249,11 @@ export const getDatesWithDurationLongerThanZero = (duration: DateDurationMap | I
  * @param dateRange
  * @returns
  */
-export const getDurationsInDateRange = (
-    dateDurationMap: DateDurationMap,
-    dateRange: DateRange
-    // removeInvalidDurations = true
-): DateDurationMap => {
+export const getDurationsInDateRange = (dateDurationMap: DateDurationMap, dateRange: DateRange): DateDurationMap => {
     const returnMap: DateDurationMap = {};
     Object.keys(dateDurationMap).forEach((isoDate) => {
         const date = ISODateToDate(isoDate);
         if (date && isDateInDateRange(date, dateRange)) {
-            // if (removeInvalidDurations && isValidDuration(dateDurationMap[isoDate]) === false) {
-            //     return;
-            // }
             returnMap[isoDate] = dateDurationMap[isoDate];
         }
         return false;
@@ -316,6 +309,15 @@ export const getNumberDurationOrUndefined = (duration?: Duration): NumberDuratio
     return undefined;
 };
 
+export const getDateRangeFromDateDurationMap = (dateDurationMap: DateDurationMap): DateRange => {
+    const unsortedDates = Object.keys(dateDurationMap).map((key) => ISODateToDate(key));
+    const sortedDates = sortDateArray(unsortedDates);
+    return {
+        from: sortedDates[0],
+        to: sortedDates[sortedDates.length - 1],
+    };
+};
+
 export const durationUtils = {
     decimalDurationToDuration,
     decimalDurationToNumberDuration,
@@ -329,6 +331,7 @@ export const durationUtils = {
     ensureDuration,
     ensureNumberDuration,
     getDateDurationDiff,
+    getDateRangeFromDateDurationMap,
     getDatesWithDurationLongerThanZero,
     getDurationsDiff,
     getDurationsInDateRange,

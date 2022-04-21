@@ -15,10 +15,11 @@ import {
     ISODurationToNumberDuration,
     isValidDuration,
 } from '../';
-import { ISODateToDate } from '../dateUtils';
+import { dateToISODate, ISODateToDate } from '../dateUtils';
 import {
     durationIsGreatherThanZero,
     getDateDurationDiff,
+    getDateRangeFromDateDurationMap,
     getDatesWithDurationLongerThanZero,
     getDurationsDiff,
     getDurationsInDateRange,
@@ -601,6 +602,31 @@ describe('durationUtils', () => {
         });
         it('returns duration if duration is valid', () => {
             expect(getNumberDurationOrUndefined({ hours: '1', minutes: '0' })).toBeDefined();
+        });
+    });
+
+    describe('getDateRangeFromDateDurationMap', () => {
+        it('gets correct date range from map with one date', () => {
+            const result = getDateRangeFromDateDurationMap({ '2022-01-03': { hours: '1', minutes: '0' } });
+            expect(dateToISODate(result.from)).toEqual('2022-01-03');
+            expect(dateToISODate(result.to)).toEqual('2022-01-03');
+        });
+        it('gets correct date range from map with two dates', () => {
+            const result = getDateRangeFromDateDurationMap({
+                '2022-01-03': { hours: '1', minutes: '0' },
+                '2022-01-04': { hours: '1', minutes: '0' },
+            });
+            expect(dateToISODate(result.from)).toEqual('2022-01-03');
+            expect(dateToISODate(result.to)).toEqual('2022-01-04');
+        });
+        it('gets correct date range from map with multiple dates in wrong order', () => {
+            const result = getDateRangeFromDateDurationMap({
+                '2022-01-04': { hours: '1', minutes: '0' },
+                '2022-01-05': { hours: '1', minutes: '0' },
+                '2022-01-03': { hours: '1', minutes: '0' },
+            });
+            expect(dateToISODate(result.from)).toEqual('2022-01-03');
+            expect(dateToISODate(result.to)).toEqual('2022-01-05');
         });
     });
 });

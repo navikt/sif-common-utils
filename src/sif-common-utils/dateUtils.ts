@@ -97,6 +97,11 @@ export const getLastOfTwoDates = (date1: Date, date2: Date): Date => {
     return dayjs(date1).isBefore(date2, 'day') ? date2 : date1;
 };
 
+export const sortDateArray = (dates: Date[]): Date[] =>
+    dates.sort((d1, d2) => {
+        return d1.getTime() - d2.getTime();
+    });
+
 export const dateUtils = {
     dateToday,
     dateToISODate,

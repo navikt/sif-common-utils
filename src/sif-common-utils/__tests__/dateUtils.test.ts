@@ -16,6 +16,7 @@ import {
     getLastWeekdayOnOrBeforeDate,
     getFirstWeekdayOnOrAfterDate,
 } from '..';
+import { sortDateArray } from '../dateUtils';
 
 describe('dateUtils', () => {
     describe('ISODateToDate', () => {
@@ -225,6 +226,30 @@ describe('dateUtils', () => {
         });
         it('returns friday before date if date is a sunday', () => {
             expect(dateToISODate(getFirstWeekdayOnOrAfterDate(sunday))).toEqual('2022-08-08');
+        });
+    });
+
+    describe('sortDateArray', () => {
+        const d1s = '2022-01-03';
+        const d2s = '2022-01-04';
+        const d3s = '2022-01-05';
+        const d1 = ISODateToDate(d1s);
+        const d2 = ISODateToDate(d2s);
+        const d3 = ISODateToDate(d3s);
+
+        it('sorts correctly 1', () => {
+            const dates = [d2, d1, d3];
+            const result = sortDateArray(dates);
+            expect(dateToISODate(result[0])).toEqual(d1s);
+            expect(dateToISODate(result[1])).toEqual(d2s);
+            expect(dateToISODate(result[2])).toEqual(d3s);
+        });
+        it('sorts correctly 2', () => {
+            const dates = [d3, d2, d1];
+            const result = sortDateArray(dates);
+            expect(dateToISODate(result[0])).toEqual(d1s);
+            expect(dateToISODate(result[1])).toEqual(d2s);
+            expect(dateToISODate(result[2])).toEqual(d3s);
         });
     });
 });
