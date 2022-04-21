@@ -1,10 +1,13 @@
 import { DurationWeekdays, getDurationForISOWeekdayNumber } from '..';
+import { ISODateToDate } from '../dateUtils';
+import { durationToISODuration, ISODurationToDuration } from '../durationUtils';
 import {
     getAllWeekdaysWithoutDuration,
+    getDateDurationMapFromDurationWeekdaysInDateRange,
     getWeekdaysWithDuration,
     summarizeDurationInDurationWeekdays,
 } from '../durationWeekdaysUtils';
-import { Duration, Weekday } from '../types';
+import { DateRange, Duration, Weekday } from '../types';
 
 const duration: Duration = {
     hours: '1',
@@ -137,6 +140,30 @@ describe('workDurationUtils', () => {
             expect(weekdays[0]).toEqual(Weekday.tuesday);
             expect(weekdays[1]).toEqual(Weekday.wednesday);
             expect(weekdays[2]).toEqual(Weekday.friday);
+        });
+    });
+    describe('getDateDurationMapFromDurationWeekdaysInDateRange', () => {
+        const periode: DateRange = {
+            from: ISODateToDate('2022-01-03'),
+            to: ISODateToDate('2022-01-12'),
+        };
+        const durationWeekdays: DurationWeekdays = {
+            monday: ISODurationToDuration('PT1H0M'),
+            tuesday: ISODurationToDuration('PT2H0M'),
+            thursday: ISODurationToDuration('PT3H0M'),
+            friday: ISODurationToDuration('PT4H0M'),
+        };
+        it('returnerer alle dager riktig', () => {
+            const result = getDateDurationMapFromDurationWeekdaysInDateRange(periode, durationWeekdays);
+            expect(Object.keys(result).length).toEqual(6);
+            expect(durationToISODuration(result['2022-01-03'])).toEqual('PT1H0M');
+            expect(durationToISODuration(result['2022-01-04'])).toEqual('PT2H0M');
+            expect(result['2022-01-05']).toBeUndefined();
+            expect(durationToISODuration(result['2022-01-06'])).toEqual('PT3H0M');
+            expect(durationToISODuration(result['2022-01-07'])).toEqual('PT4H0M');
+            expect(durationToISODuration(result['2022-01-10'])).toEqual('PT1H0M');
+            expect(durationToISODuration(result['2022-01-11'])).toEqual('PT2H0M');
+            expect(result['2022-01-12']).toBeUndefined();
         });
     });
 });

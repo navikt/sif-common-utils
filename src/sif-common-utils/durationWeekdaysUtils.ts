@@ -1,4 +1,7 @@
-import { NumberDuration, DurationWeekdays, summarizeDurations, Duration } from '.';
+import dayjs from 'dayjs';
+import isoWeek from 'dayjs/plugin/isoWeek';
+import { Duration, DurationWeekdays, getDatesInDateRange, NumberDuration, summarizeDurations } from './';
+import { dateToISODate } from './dateUtils';
 import {
     decimalDurationToDuration,
     durationIsGreatherThanZero,
@@ -7,7 +10,29 @@ import {
     getNumberDurationOrUndefined,
     getPercentageOfDuration,
 } from './durationUtils';
-import { ISODurationWeekdays, Weekday } from './types';
+import { DateDurationMap, DateRange, ISODurationWeekdays, Weekday } from './types';
+
+dayjs.extend(isoWeek);
+
+export const getISOWeekdaysFromDurationWeekdays = (durationWeekdays: DurationWeekdays): number[] => {
+    const isoWeekdays: number[] = [];
+    if (durationWeekdays.monday) {
+        isoWeekdays.push(1);
+    }
+    if (durationWeekdays.tuesday) {
+        isoWeekdays.push(2);
+    }
+    if (durationWeekdays.wednesday) {
+        isoWeekdays.push(3);
+    }
+    if (durationWeekdays.thursday) {
+        isoWeekdays.push(4);
+    }
+    if (durationWeekdays.friday) {
+        isoWeekdays.push(5);
+    }
+    return isoWeekdays;
+};
 
 export const summarizeDurationInDurationWeekdays = (weekdays: DurationWeekdays): NumberDuration => {
     return summarizeDurations([
@@ -21,9 +46,9 @@ export const summarizeDurationInDurationWeekdays = (weekdays: DurationWeekdays):
 
 export const getDurationForISOWeekdayNumber = (
     durationWeekdays: DurationWeekdays,
-    weekday: number
+    isoWeekday: number
 ): Duration | undefined => {
-    switch (weekday) {
+    switch (isoWeekday) {
         case 1:
             return durationWeekdays.monday;
         case 2:
@@ -152,4 +177,29 @@ export const removeDurationWeekdaysWithNoDuration = ({
         [Weekday.thursday]: getDurationOrUndefinedIfNoDuration(thursday),
         [Weekday.friday]: getDurationOrUndefinedIfNoDuration(friday),
     };
+};
+
+/**
+ * Lage DateDurationMap ut fra periode og DurationWeekdays
+ * @param dateRange
+ * @param durationWeekdays
+ * @returns dateDurationMap for alle datoer i perioden med durations fra @durationWeekdays
+ */
+export const getDateDurationMapFromDurationWeekdaysInDateRange = (
+    dateRange: DateRange,
+    durationWeekdays: DurationWeekdays
+): DateDurationMap => {
+    const resultMap: DateDurationMap = {};
+    const weekdays = getISOWeekdaysFromDurationWeekdays(durationWeekdays);
+    getDatesInDateRange(dateRange)
+        .filter((d) => weekdays.includes(dayjs(d).isoWeekday()))
+        .forEach((d) => {
+            const isoDate = dateToISODate(d);
+            const duration = getDurationForISOWeekdayNumber(durationWeekdays, dayjs(d).isoWeekday());
+            if (duration) {
+                resultMap[isoDate] = duration;
+            }
+        });
+
+    return resultMap;
 };
