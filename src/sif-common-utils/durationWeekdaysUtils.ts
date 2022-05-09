@@ -171,10 +171,13 @@ const getDurationOrUndefinedIfZeroDuration = (duration: Duration | undefined): D
     return durationIsGreatherThanZero(duration) ? duration : undefined;
 };
 
-export const removeDurationWeekdaysWithNoDuration = (
-    { monday, tuesday, wednesday, thursday, friday }: DurationWeekdays,
-    keepInvalidDurations?: boolean
-): DurationWeekdays => {
+export const removeDurationWeekdaysWithNoDuration = ({
+    monday,
+    tuesday,
+    wednesday,
+    thursday,
+    friday,
+}: DurationWeekdays): DurationWeekdays => {
     return {
         [Weekday.monday]: getDurationOrUndefinedIfZeroDuration(monday),
         [Weekday.tuesday]: getDurationOrUndefinedIfZeroDuration(tuesday),
