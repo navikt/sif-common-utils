@@ -1,6 +1,6 @@
 {
     "name": "@navikt/sif-common-utils",
-    "version": "3.8.0",
+    "version": "3.8.1",
     "private": false,
     "main": "lib/index.js",
     "types": "lib/index.d.js",
@@ -37,7 +37,7 @@
         "@types/jest": "^27.4.1",
         "@types/lodash.uniq": "^4.5.6",
         "@types/node": "^17.0.22",
-        "@types/react": "^17.0.41",
+        "@types/react": "^18.0.9",
         "@types/react-dom": "^17.0.14",
         "dayjs": "^1.11.0",
         "eslint": "^8.11.0",
