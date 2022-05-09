@@ -9,6 +9,7 @@ import {
     durationToISODuration,
     getNumberDurationOrUndefined,
     getPercentageOfDuration,
+    isValidDuration,
 } from './durationUtils';
 import { DateDurationMap, DateRange, ISODurationWeekdays, Weekday } from './types';
 
@@ -160,22 +161,26 @@ export const removeDurationWeekdaysNotInDurationWeekdays = (
     };
 };
 
-const getDurationOrUndefinedIfNoDuration = (duration?: Duration): Duration | undefined =>
-    duration === undefined || durationIsGreatherThanZero(duration) === false ? undefined : duration;
+const getDurationOrUndefinedIfZeroDuration = (duration: Duration | undefined): Duration | undefined => {
+    if (duration === undefined) {
+        return undefined;
+    }
+    if (isValidDuration(duration) === false) {
+        return duration;
+    }
+    return durationIsGreatherThanZero(duration) ? duration : undefined;
+};
 
-export const removeDurationWeekdaysWithNoDuration = ({
-    monday,
-    tuesday,
-    wednesday,
-    thursday,
-    friday,
-}: DurationWeekdays): DurationWeekdays => {
+export const removeDurationWeekdaysWithNoDuration = (
+    { monday, tuesday, wednesday, thursday, friday }: DurationWeekdays,
+    keepInvalidDurations?: boolean
+): DurationWeekdays => {
     return {
-        [Weekday.monday]: getDurationOrUndefinedIfNoDuration(monday),
-        [Weekday.tuesday]: getDurationOrUndefinedIfNoDuration(tuesday),
-        [Weekday.wednesday]: getDurationOrUndefinedIfNoDuration(wednesday),
-        [Weekday.thursday]: getDurationOrUndefinedIfNoDuration(thursday),
-        [Weekday.friday]: getDurationOrUndefinedIfNoDuration(friday),
+        [Weekday.monday]: getDurationOrUndefinedIfZeroDuration(monday),
+        [Weekday.tuesday]: getDurationOrUndefinedIfZeroDuration(tuesday),
+        [Weekday.wednesday]: getDurationOrUndefinedIfZeroDuration(wednesday),
+        [Weekday.thursday]: getDurationOrUndefinedIfZeroDuration(thursday),
+        [Weekday.friday]: getDurationOrUndefinedIfZeroDuration(friday),
     };
 };
 
