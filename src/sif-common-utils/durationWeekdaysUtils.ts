@@ -7,6 +7,7 @@ import {
     durationIsGreatherThanZero,
     durationToDecimalDuration,
     durationToISODuration,
+    ensureDuration,
     getNumberDurationOrUndefined,
     getPercentageOfDuration,
     isValidDuration,
@@ -128,6 +129,16 @@ export const getWeekdaysWithDuration = (durationWeekdays: DurationWeekdays): Wee
             return duration ? durationToDecimalDuration(duration) > 0 : false;
         })
         .map((key) => key as Weekday);
+};
+
+export const ensureCompleteDurationWeekdays = (durationWeekdays: DurationWeekdays): DurationWeekdays => {
+    return {
+        [Weekday.monday]: ensureDuration(durationWeekdays[Weekday.monday] || {}),
+        [Weekday.tuesday]: ensureDuration(durationWeekdays[Weekday.tuesday] || {}),
+        [Weekday.wednesday]: ensureDuration(durationWeekdays[Weekday.wednesday] || {}),
+        [Weekday.thursday]: ensureDuration(durationWeekdays[Weekday.thursday] || {}),
+        [Weekday.friday]: ensureDuration(durationWeekdays[Weekday.friday] || {}),
+    };
 };
 
 /**

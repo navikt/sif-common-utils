@@ -2,6 +2,7 @@ import { DurationWeekdays, getDurationForISOWeekdayNumber } from '..';
 import { ISODateToDate } from '../dateUtils';
 import { durationToISODuration, ISODurationToDuration } from '../durationUtils';
 import {
+    ensureCompleteDurationWeekdays,
     getAllWeekdaysWithoutDuration,
     getDateDurationMapFromDurationWeekdaysInDateRange,
     getWeekdaysWithDuration,
@@ -164,6 +165,48 @@ describe('workDurationUtils', () => {
             expect(durationToISODuration(result['2022-01-10'])).toEqual('PT1H0M');
             expect(durationToISODuration(result['2022-01-11'])).toEqual('PT2H0M');
             expect(result['2022-01-12']).toBeUndefined();
+        });
+    });
+    describe('ensureCompleteDurationWeekdays', () => {
+        const duration: Duration = { hours: '2', minutes: '10' };
+        const noDuration: Duration = { hours: '0', minutes: '0' };
+        it('endrer ikke allerede komplett durationWeekdays', () => {
+            const dw: DurationWeekdays = {
+                [Weekday.monday]: { ...duration },
+                [Weekday.tuesday]: { ...duration },
+                [Weekday.wednesday]: { ...duration },
+                [Weekday.thursday]: { ...duration },
+                [Weekday.friday]: { ...duration },
+            };
+            const result = ensureCompleteDurationWeekdays(dw);
+            expect(durationToISODuration(result[Weekday.monday]!)).toEqual(durationToISODuration(duration));
+            expect(durationToISODuration(result[Weekday.tuesday]!)).toEqual(durationToISODuration(duration));
+            expect(durationToISODuration(result[Weekday.wednesday]!)).toEqual(durationToISODuration(duration));
+            expect(durationToISODuration(result[Weekday.thursday]!)).toEqual(durationToISODuration(duration));
+            expect(durationToISODuration(result[Weekday.friday]!)).toEqual(durationToISODuration(duration));
+        });
+        it('fyller ut en ukomplett uke', () => {
+            const dw: DurationWeekdays = {
+                [Weekday.monday]: { ...duration },
+                [Weekday.friday]: { ...duration },
+            };
+            const result = ensureCompleteDurationWeekdays(dw);
+            expect(durationToISODuration(result[Weekday.monday]!)).toEqual(durationToISODuration(duration));
+            expect(durationToISODuration(result[Weekday.tuesday]!)).toEqual(durationToISODuration(noDuration));
+            expect(durationToISODuration(result[Weekday.wednesday]!)).toEqual(durationToISODuration(noDuration));
+            expect(durationToISODuration(result[Weekday.thursday]!)).toEqual(durationToISODuration(noDuration));
+            expect(durationToISODuration(result[Weekday.friday]!)).toEqual(durationToISODuration(duration));
+        });
+        it('fyller ut en ukomplette dager', () => {
+            const dw: DurationWeekdays = {
+                [Weekday.tuesday]: { hours: '20' } as any,
+                [Weekday.wednesday]: { minutes: '10' } as any,
+            };
+            const result = ensureCompleteDurationWeekdays(dw);
+            expect(result[Weekday.tuesday]!.hours).toEqual('20');
+            expect(result[Weekday.tuesday]!.minutes).toEqual('0');
+            expect(result[Weekday.wednesday]!.hours).toEqual('0');
+            expect(result[Weekday.wednesday]!.minutes).toEqual('10');
         });
     });
 });
