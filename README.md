@@ -1,3 +1,5 @@
+Dette repoet er nå erstatte av @navikt/sif-brukerdialog.
+
 # sif-common-utils
 
 Samling av utils brukt av SIF - Sykdom i familien teamet hos NAV
